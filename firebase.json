@@ -1,0 +1,7 @@
+{
+  "hosting": {
+    "site": "cesi-jogos",
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+  }
+}
