@@ -37,7 +37,7 @@ const AllOptions = {
 };
 
 const conflicts = {
-  Ç: ["S"],
+  Ç: ["S", "C"],
   S: ["Ç", "C"],
   C: ["S", "Q", "K", "Ç"],
   Q: ["C"],
