@@ -31,9 +31,9 @@ const AllOptions = {
   Ç: ["S"],
   CH: ["X"],
 
-  LH: ["LH"], // missing sound
-  NH: ["NH"], // missing sound
-  ÃO: ["AO"], // missing sound
+  LH: ["LH"],
+  NH: ["NH"],
+  ÃO: ["AO"],
 };
 
 const conflicts = {
