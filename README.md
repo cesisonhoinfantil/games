@@ -1,50 +1,54 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
+<h3 align="center">
+  🚧  Em construção...  🚧
+</h3>
+<p align="center">
+  Este projeto e repositório, está em fase inicial de desenvolvimento, então espere encontra erros, bugs, instabilidades e afins
+</p>
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<br>
 
-## Expanding the ESLint configuration
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4ee6e25d-c21f-49c3-9b10-f400770c1b4b" alt="Logo" height=110>
+</p>
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+<h1 align="center">🕹️ Games CESI 🕹️</h1>
 
-- Configure the top-level `parserOptions` property like this:
+<p align="center">
+  <img src="https://img.shields.io/github/license/cesisonhoinfantil/games"/>
+  <img src="https://img.shields.io/github/last-commit/cesisonhoinfantil/games"/>
+  <img src="https://img.shields.io/github/languages/top/cesisonhoinfantil/games"/>
+</p>
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+<p align="center">
+  🎮 A página de jogos da escola CESI 🎮
+</p>
+
+<p align="center">
+ <a href="#sobre">Sobre</a>
+ <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
+ <a href="#desenvolvimento">Desenvolvimento</a>
+</p>
+
+## Sobre
+
+Este é um projeto destinado a criar jogos educacionais, seguindo por base a metodologia das onomatopeias (mas claro não se limitando).
+
+O principal objetivo é divertir as crianças e as ensinar,
+assim como ser mais um recurso pedagógico para ajudar professores a criar uma interação maior dentro de sala ou até fora dela
+
+## Desenvolvimento
+
+### Instalando e executando
+
+As ferramentas necessárias são: [Git](https://git-scm.com) e [Bun](https://bun.sh/)
+
 ```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+git clone git@github.com:cesisonhoinfantil/games.git
+cd games
+bun install
+bun run dev
 ```
