@@ -47,7 +47,7 @@ assim como ser mais um recurso pedagógico para ajudar professores a criar uma i
 As ferramentas necessárias são: [Git](https://git-scm.com) e [Bun](https://bun.sh/)
 
 ```
-git clone git@github.com:cesisonhoinfantil/games.git
+git clone https://github.com/cesisonhoinfantil/games.git
 cd games
 bun install
 bun run dev
