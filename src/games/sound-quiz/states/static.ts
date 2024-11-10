@@ -1,4 +1,4 @@
-import { GameData } from "./game.interfaces";
+import { GameData } from "./interfaces";
 
 const AllOptions = {
   A: ["A", "A2"],

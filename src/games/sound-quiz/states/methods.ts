@@ -1,11 +1,12 @@
 import { RandomIndex, RandomItem } from "@/lib/utils";
-import { create } from "zustand";
-import { GameData, GameState } from "./game.interfaces";
-import { AllOptions, conflicts, InitialData, optionsKeys } from "./game.static";
+import { StateCreator } from "zustand";
+import { GameData, GameState } from "./interfaces";
+import { AllOptions, conflicts, InitialData, optionsKeys } from "./static";
 
-const useGameState = create<GameState & GameData>()((set, get) => ({
-  ...InitialData,
-
+const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
+  set,
+  get
+) => ({
   select(toSelect) {
     if (toSelect == null) return;
     set({ selected: toSelect });
@@ -81,6 +82,6 @@ const useGameState = create<GameState & GameData>()((set, get) => ({
   reset() {
     set({ ...InitialData });
   },
-}));
+});
 
-export default useGameState;
+export default createMethods;
