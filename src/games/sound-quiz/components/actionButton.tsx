@@ -42,11 +42,11 @@ export function ActionButton() {
       onClick={() => play()}
       variants="white"
       affect="p-0"
-      className="w-2/3 min-h-36 m-auto"
+      className="w-2/4 h-full landscape:aspect-square m-auto"
     >
       <div className="relative w-full h-full flex justify-center items-center">
         <Volume2 color="#3BA7C5" size={32} className="absolute top-3 right-3" />
-        <picture className="w-full h-full p-4 px-11">
+        <picture className="w-full h-full p-4 px-8">
           <source srcSet={`/onomatopeias/png/${img}.png`} />
           <img
             className="w-full h-full object-contain"

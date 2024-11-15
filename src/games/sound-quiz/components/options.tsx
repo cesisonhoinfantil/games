@@ -14,7 +14,7 @@ export function Options() {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 gap-2 gap-y-4 pt-6 w-4/5 m-auto items-center">
+    <div className="grid grid-cols-2 gap-2 gap-y-4 pt-6 w-4/5 m-auto items-center landscape:pt-0">
       {options.map((value, index) => (
         <Button
           variants={selected == index ? "white" : "default"}
