@@ -49,7 +49,7 @@ export function ActionButton() {
         <picture className="w-full h-full p-4 px-8">
           <source srcSet={`/onomatopeias/png/${img}.png`} />
           <img
-            className="w-full h-full object-contain"
+            className="w-full h-full object-contain max-h-40 sm:max-h-none min-h-36"
             src="/onomatopeias/A2.png"
           />
         </picture>
