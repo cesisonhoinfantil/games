@@ -72,6 +72,34 @@
   font-style: normal;
 }
 
+.sun-rays {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    transparent 0,
+    transparent 10%,
+    #8ee7ff 0,
+    #8ee7ff 100%
+  );
+  mask-image: repeating-conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 2deg,
+    black 2deg,
+    black 4deg
+  );
+  -webkit-mask-image: repeating-conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 2deg,
+    black 2deg,
+    black 4deg
+  );
+  mask-composite: intersect;
+  -webkit-mask-composite: intersect;
+}
+
 html,
 body,
 #root {
