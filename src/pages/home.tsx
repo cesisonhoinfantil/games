@@ -10,7 +10,7 @@ export function Home() {
 
   return (
     <>
-      <div className="w-full h-full z-10 relative place-items-center pb-5 overflow-hidden grid grid-cols-2 grid-rows-[min-content_1fr_min-content_min-content]">
+      <div className="w-full h-full z-10 relative place-items-center overflow-x-hidden pb-5 grid grid-cols-2 grid-rows-[min-content_1fr_min-content_min-content]">
         <img
           className="w-4/5 max-w-72 max-h-16 lg:max-w-[900px] md:max-h-[120px] col-span-2 mt-12 landscape:mt-6"
           src="/title.svg"
@@ -37,7 +37,7 @@ export function Home() {
         </p>
       </div>
       {/* Sun rays background */}
-      <div className="absolute top-0 left-0 w-screen h-screen sun-rays" />
+      <div className="fixed top-0 left-0 w-screen h-screen sun-rays" />
     </>
   );
 }
