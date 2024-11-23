@@ -32,7 +32,7 @@ export function Home() {
             Créditos
           </Button>
         </div>
-        <p className="col-span-2 text-sm font-semibold pt-4">
+        <p className="col-span-2 text-sm text-center font-semibold pt-4">
           Copyright © CESI 2024. Todos os direitos reservados.
         </p>
       </div>
