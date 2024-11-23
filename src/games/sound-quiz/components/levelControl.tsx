@@ -1,5 +1,6 @@
 import Button from "@/components/animata/button/duolingo";
 import { Status } from "@/components/status";
+import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import useSound from "use-sound";
 import useGameState from "../states";
@@ -21,7 +22,12 @@ export function LevelControl() {
   }, [GameStatus, lose, win]);
 
   return (
-    <div className="w-full h-full flex justify-center items-end py-6 relative">
+    <div
+      className={cn(
+        "w-full h-full flex justify-center items-end py-6 relative z-10",
+        GameStatus && "fixed h-1/4 bottom-0"
+      )}
+    >
       {GameStatus && (
         <Status
           className="motion-preset-slide-up-md"
