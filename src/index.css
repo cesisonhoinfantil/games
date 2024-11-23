@@ -72,6 +72,10 @@
   font-style: normal;
 }
 
+.sun-rays {
+  background: no-repeat center/max(150vh, 150vw) url("/rays-bg.svg");
+}
+
 html,
 body,
 #root {
