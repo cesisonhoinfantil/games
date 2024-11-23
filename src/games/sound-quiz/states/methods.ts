@@ -87,7 +87,7 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
       console.log("pass");
     } while (history[history.length - 1] == optionsArr[correct]);
 
-    if (imageIndex > 0 && option in AltsExtraInfos) {
+    if ((imageIndex > 0 || option === "Ç") && option in AltsExtraInfos) {
       extraInfo = AltsExtraInfos[option];
     }
 
