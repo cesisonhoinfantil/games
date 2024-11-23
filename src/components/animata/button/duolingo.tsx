@@ -64,8 +64,8 @@ export default function Button({
     >
       <button
         className={cn(
-          DuolingoVariants({ variants, className: affect }),
-          "disabled:opacity-65"
+          "disabled:opacity-65",
+          DuolingoVariants({ variants, className: affect })
         )}
         role="button"
         {...props}

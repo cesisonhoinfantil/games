@@ -17,6 +17,7 @@ export interface GameData {
   level: number;
   difficulty: "easy" | "medium" | "hard";
   history: string[];
+  extraInfo?: string;
 
   startAt?: Date;
 

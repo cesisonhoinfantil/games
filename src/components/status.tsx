@@ -2,20 +2,17 @@ import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 import { ReactNode } from "react";
 
-const StatusVariants = cva(
-  "absolute w-full p-4 pb-24 bottom-0 after:absolute after:left-0 after:h-[140%] after: after:w-full",
-  {
-    variants: {
-      variant: {
-        success: "bg-lime-300 after:bg-lime-300 text-lime-700",
-        error: "bg-rose-300 after:bg-rose-300 text-red-600",
-      },
+const StatusVariants = cva("absolute w-full p-4 pb-24 bottom-0", {
+  variants: {
+    variant: {
+      success: "bg-lime-300 after:bg-lime-300 text-lime-700",
+      error: "bg-rose-300 after:bg-rose-300 text-red-600",
     },
-    defaultVariants: {
-      variant: "success",
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: "success",
+  },
+});
 
 export interface StatusProps
   extends React.HTMLAttributes<HTMLDivElement>,
