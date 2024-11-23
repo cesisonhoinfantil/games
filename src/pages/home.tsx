@@ -154,7 +154,7 @@ function Onomatopeias() {
   }, []);
 
   return (
-    <div className="-mt-10 py-8 w-10/12 h-[inherit] flex flex-col justify-around col-span-2 landscape:pl-9 landscape:col-span-1 landscape:-translate-y-4">
+    <div className="-z-10 -mt-10 py-8 w-10/12 h-[inherit] flex flex-col justify-around col-span-2 landscape:pl-9 landscape:col-span-1 landscape:-mt-16">
       {Containers.map((line, lineIndex) => {
         return (
           <div
