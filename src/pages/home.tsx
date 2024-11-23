@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { AllOptions } from "@/games/sound-quiz/states/static";
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
 import { nanoid } from "nanoid";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -100,8 +100,6 @@ function Onomatopeias() {
     function getGlobalScale() {
       const height = size[1];
 
-      console.log(height);
-
       if (height <= 375) {
         return -0.3;
       } else if (height >= 850) {
@@ -144,9 +142,9 @@ function Onomatopeias() {
   }, [size]);
 
   useLayoutEffect(() => {
-    const onResize = () => {
+    const onResize = debounce(() => {
       setSize([window.innerWidth, window.innerHeight]);
-    };
+    }, 200);
 
     window.addEventListener("resize", onResize);
     onResize();
