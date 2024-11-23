@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { AllOptions } from "@/games/sound-quiz/states/static";
 import { cn, debounce } from "@/lib/utils";
 import { nanoid } from "nanoid";
-import { useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function Home() {
@@ -151,6 +151,21 @@ function Onomatopeias() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
+  const AnimationChange = useCallback(
+    (event: React.AnimationEvent<HTMLImageElement>) => {
+      const target = event.currentTarget;
+      if (target.className.indexOf("motion-preset-pop") > -1) {
+        target.style.animationDelay = "0ms";
+        target.style.animationTimingFunction = "ease-in-out";
+        target.className = target.className.replace(
+          "motion-preset-pop",
+          "motion-preset-oscillate-md"
+        );
+      }
+    },
+    []
+  );
+
   return (
     <div className="-z-10 -mt-10 py-8 w-10/12 h-[inherit] flex flex-col justify-around col-span-2 landscape:pl-9 landscape:col-span-1 landscape:-mt-16">
       {Containers.map((line, lineIndex) => {
@@ -171,9 +186,10 @@ function Onomatopeias() {
                     src={`/onomatopeias/png/${item.img}.png`}
                     key={nanoid()}
                     style={item.style}
+                    onAnimationEnd={AnimationChange}
                     className={cn(
                       item.hidden,
-                      "w-20 h-20 object-contain object-top motion-preset-pop motion-preset-oscillate-md motion-duration-2000"
+                      "w-20 h-20 object-contain object-top motion-duration-2000 motion-preset-pop"
                     )}
                     alt={`Onomatopeia ${lineIndex}-${itemIndex}`}
                   ></img>
