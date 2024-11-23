@@ -57,6 +57,12 @@ const conflicts = {
   J: ["G"],
 } as Record<string, string[]>;
 
+const AltsExtraInfos = {
+  C: "E - I",
+  Ç: "A - O - U",
+  G: "E - I",
+} as Record<string, string>;
+
 const optionsKeys = Object.keys(AllOptions) as (keyof typeof AllOptions)[];
 
 const InitialData: GameData = {
@@ -64,6 +70,7 @@ const InitialData: GameData = {
   level: 1,
   difficulty: "easy",
   history: [],
+  extraInfo: undefined,
 
   startAt: undefined,
   status: undefined,
@@ -73,4 +80,4 @@ const InitialData: GameData = {
   options: [],
 };
 
-export { AllOptions, conflicts, InitialData, optionsKeys };
+export { AllOptions, AltsExtraInfos, conflicts, InitialData, optionsKeys };

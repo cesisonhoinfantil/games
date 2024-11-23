@@ -7,6 +7,7 @@ import useGameState from "../states";
 export function ActionButton() {
   const img = useGameState((state) => state.img);
   const state = useGameState((state) => state.status); // force update on pass level
+  const extraInfo = useGameState((state) => state.extraInfo);
   const audio = useRef<Howl>();
 
   useEffect(() => {
@@ -46,7 +47,10 @@ export function ActionButton() {
     >
       <div className="relative w-full h-full flex justify-center items-center">
         <Volume2 color="#3BA7C5" size={32} className="absolute top-3 right-3" />
-        <picture className="w-full h-full p-4 px-8">
+        <p className="absolute w-full bottom-0 text-center text-lg">
+          {extraInfo}
+        </p>
+        <picture className="w-full h-full p-4 pb-6 px-8">
           <source srcSet={`/onomatopeias/png/${img}.png`} />
           <img
             className="w-full h-full object-contain max-h-40 sm:max-h-none min-h-36"

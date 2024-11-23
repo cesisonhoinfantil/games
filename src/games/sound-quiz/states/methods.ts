@@ -1,7 +1,13 @@
 import { RandomIndex, RandomItem } from "@/lib/utils";
 import { StateCreator } from "zustand";
 import { GameData, GameState } from "./interfaces";
-import { AllOptions, conflicts, InitialData, optionsKeys } from "./static";
+import {
+  AllOptions,
+  AltsExtraInfos,
+  conflicts,
+  InitialData,
+  optionsKeys,
+} from "./static";
 
 const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
   set,
@@ -69,15 +75,23 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
     const optionsArr = Array.from(options);
     let correct;
     let img;
+    let option;
+    let imageIndex;
+    let extraInfo = "";
 
     do {
       correct = RandomIndex(optionsArr);
-      const option = optionsArr[correct] as keyof typeof AllOptions;
-      img = RandomItem(AllOptions[option]);
+      option = optionsArr[correct] as keyof typeof AllOptions;
+      imageIndex = RandomIndex(AllOptions[option]);
+      img = AllOptions[option][imageIndex];
       console.log("pass");
     } while (history[history.length - 1] == optionsArr[correct]);
 
-    set({ img, correct, options: optionsArr });
+    if (imageIndex > 0 && option in AltsExtraInfos) {
+      extraInfo = AltsExtraInfos[option];
+    }
+
+    set({ img, correct, options: optionsArr, extraInfo });
   },
   reset() {
     set({ ...InitialData });
