@@ -23,7 +23,10 @@ export function LevelControl() {
   return (
     <div className="w-full h-full flex justify-center items-end py-6 relative">
       {GameStatus && (
-        <Status variant={GameStatus == "win" ? "success" : "error"} />
+        <Status
+          className="motion-preset-slide-up-md"
+          variant={GameStatus == "win" ? "success" : "error"}
+        />
       )}
       <Button
         className="w-2/3"
