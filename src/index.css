@@ -73,7 +73,8 @@
 }
 
 .sun-rays {
-  background: no-repeat center/max(150vh, 150vw) url("/rays-bg.svg");
+  background: url("/rays-bg.svg") no-repeat center center fixed;
+  background-size: cover;
 }
 
 html,

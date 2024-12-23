@@ -37,7 +37,9 @@ export function Home() {
         </p>
       </div>
       {/* Sun rays background */}
-      <div className="fixed top-0 left-0 w-screen h-screen sun-rays" />
+      <div className="fixed top-0 left-0 w-screen h-screen overflow-hidden flex items-center justify-center">
+        <div className="h-full w-full sun-rays" />
+      </div>
     </>
   );
 }
