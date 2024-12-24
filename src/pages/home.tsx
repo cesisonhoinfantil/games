@@ -26,7 +26,6 @@ export function Home() {
           </Button>
           <Button
             onClick={() => navigate("/credits")}
-            disabled
             className="w-2/5 h-11 bg-white hover:bg-white/80 text-black text-base font-bold rounded-lg"
           >
             Créditos
