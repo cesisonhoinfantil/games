@@ -1,3 +1,4 @@
+import { EndGameModal } from "@/games/sound-quiz/components/endGame";
 import { useEffect } from "react";
 import { ActionButton, Header, LevelControl, Options } from "./components";
 import useGameState from "./states";
@@ -21,6 +22,7 @@ function SoundQuiz() {
         </div>
       </div>
       <LevelControl />
+      <EndGameModal />
     </div>
   );
 }

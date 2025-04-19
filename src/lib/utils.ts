@@ -33,3 +33,10 @@ export function debounce(
     }, wait);
   };
 }
+
+export function formatTimer(timing: number) {
+  const min = ("0" + Math.floor((timing / 60) % 60)).slice(-2);
+  const secs = ("0" + Math.floor(timing % 60)).slice(-2);
+
+  return `${min}:${secs}`;
+}
