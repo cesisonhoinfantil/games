@@ -29,22 +29,44 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
     }
   },
   nextLevel() {
-    const { status, life, level, generateLevel, history, options, correct } =
-      get();
+    const { status, generateLevel, level, life } = get();
 
     if (!status) return;
 
+    let newLevel = level;
+    let newLife = life;
+
     if (status === "win") {
-      const newLevel = level + 1;
+      const { history, score, options, correct } = get();
+
+      newLevel = level + 1;
 
       if (newLevel == 6) set({ difficulty: "medium" });
       else if (newLevel == 10) set({ difficulty: "hard" });
 
       history.push(options[correct!]);
 
-      set({ level: newLevel, history });
+      if (newLevel <= 15) {
+        set({ level: newLevel });
+      }
+
+      set({ level: newLevel, history, score: score + 1 });
     } else {
-      set({ life: life - 1 });
+      const { life, errors } = get();
+      newLife = life - 1;
+
+      set({ life: newLife, errors: errors + 1 });
+    }
+
+    if (newLevel > 15 || newLife <= 0) {
+      const { pause, timing, bestTiming } = get();
+      pause();
+      console.log(timing, bestTiming, newLevel);
+      if ((!bestTiming || timing < bestTiming) && newLevel > 15) {
+        localStorage.setItem("bestTiming", timing.toString());
+        set({ bestTiming: timing });
+      }
+      return;
     }
 
     set({ status: undefined, selected: undefined });
@@ -94,7 +116,14 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
     set({ img, correct, options: optionsArr, extraInfo });
   },
   reset() {
-    set({ ...InitialData });
+    const { bestTiming } = get();
+    set({ ...InitialData, bestTiming });
+  },
+  pause() {
+    set({ paused: !get().paused });
+  },
+  updateTiming(timing) {
+    set({ timing });
   },
 });
 

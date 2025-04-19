@@ -1,20 +1,31 @@
-import { useEffect, useState } from "react";
+import useGameState from "@/games/sound-quiz/states";
+import { formatTimer } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
+
 export function Timer() {
+  const paused = useGameState((state) => state.paused);
   const [Time, setTime] = useState(0);
+  const interval = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((state) => state + 1);
-    }, 1000);
+    if (paused && interval.current) {
+      clearInterval(interval.current);
+      setTime(0);
+    } else {
+      interval.current = setInterval(() => {
+        setTime((state) => state + 1);
+      }, 1000);
+    }
     return () => {
-      clearInterval(interval);
+      clearInterval(interval.current);
     };
-  }, []);
+  }, [paused]);
 
-  return (
-    <div>
-      {("0" + Math.floor((Time / 60) % 60)).slice(-2)}:
-      {("0" + Math.floor(Time % 60)).slice(-2)}
-    </div>
-  );
+  useEffect(() => {
+    if (Time) {
+      useGameState.getState().updateTiming(Time);
+    }
+  }, [Time]);
+
+  return <div>{formatTimer(Time)}</div>;
 }

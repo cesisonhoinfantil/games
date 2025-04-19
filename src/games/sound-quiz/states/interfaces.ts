@@ -23,6 +23,14 @@ export interface GameData {
 
   status?: "win" | "lose";
 
+  paused: boolean;
+
+  timing: number;
+  bestTiming: number;
+
+  score: number;
+  errors: number;
+
   selected?: number;
   correct?: number;
   img?: string;
@@ -41,4 +49,7 @@ export interface GameState {
   nextLevel: () => void;
   generateLevel: () => void;
   reset: () => void;
+
+  pause: () => void;
+  updateTiming: (timing: number) => void;
 }

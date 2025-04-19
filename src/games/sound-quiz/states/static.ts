@@ -75,6 +75,13 @@ const InitialData: GameData = {
   startAt: undefined,
   status: undefined,
 
+  paused: false,
+  timing: 0,
+  bestTiming: Number(localStorage.getItem("bestTiming")) || 0,
+
+  score: 0,
+  errors: 0,
+
   selected: undefined,
   correct: undefined,
   options: [],
