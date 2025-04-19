@@ -7,9 +7,10 @@ import {
   AltsExtraInfos,
   optionsKeys,
 } from "@/games/sound-quiz/states/static";
+import { useLetterSound } from "@/hooks/useLetterSound";
 import { cn } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
-import { ReactNode, useCallback, useRef, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function AlphabetHeader() {
@@ -62,19 +63,7 @@ function LetterRender({
 }
 
 export function Alphabet() {
-  const audio = useRef<Howl>();
-
-  const playSound = useCallback((letter: string) => {
-    if (audio.current?.playing()) {
-      audio.current.stop();
-    }
-    if (letter) {
-      audio.current = new Howl({
-        src: `/sounds/onomatopeias/${letter}.mp3`,
-      });
-      audio.current.play();
-    }
-  }, []);
+  const { playSound } = useLetterSound();
 
   return (
     <div className="h-full w-full landscape:h-auto grid grid-rows-[min-content_1fr]">

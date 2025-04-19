@@ -1,46 +1,24 @@
 import Button from "@/components/animata/button/duolingo";
-import { Howl } from "howler";
+import { useLetterSound } from "@/hooks/useLetterSound";
 import { Volume2 } from "lucide-react";
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import useGameState from "../states";
 
 export function ActionButton() {
   const img = useGameState((state) => state.img);
   const state = useGameState((state) => state.status); // force update on pass level
   const extraInfo = useGameState((state) => state.extraInfo);
-  const audio = useRef<Howl>();
+  const { playSound } = useLetterSound();
 
   useEffect(() => {
-    if (audio.current && audio.current.playing()) {
-      audio.current.stop();
-    }
     if (img && !state) {
-      audio.current = new Howl({
-        src: `/sounds/onomatopeias/${img}.mp3`,
-      });
-      audio.current.play();
+      playSound(img);
     }
-  }, [img, state]);
-
-  const play = useCallback(() => {
-    if (audio.current) {
-      if (audio.current.playing()) {
-        audio.current.stop();
-      }
-
-      audio.current.play();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (audio.current) {
-      audio.current.play();
-    }
-  }, []);
+  }, [img, playSound, state]);
 
   return (
     <Button
-      onClick={() => play()}
+      onClick={() => playSound(img)}
       variants="white"
       affect="p-0"
       className="w-2/4 h-full landscape:aspect-square mx-auto"
