@@ -1,3 +1,4 @@
+import { Alphabet } from "@/games/alphabet";
 import SoundQuiz from "@/games/sound-quiz";
 import { Credits } from "@/pages/credits";
 import { GameSelectPage } from "@/pages/gameSelect";
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: "/select",
     element: <GameSelectPage />,
+  },
+  {
+    path: "/alphabet",
+    element: <Alphabet />,
   },
   {
     path: "/quiz",

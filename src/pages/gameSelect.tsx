@@ -35,6 +35,12 @@ const games = [
     description:
       "Um quiz com as onomatopeias, escute o som e veja a onomatopeia e clique qual a letra que representa a onomatopeia",
   },
+  {
+    name: "Alfabeto",
+    url: "/alphabet",
+    description:
+      "Um alfabeto com as onomatopeias e suas variações, escute os sons e veja as onomatopeias",
+  },
 ];
 
 export function GameSelectPage() {
