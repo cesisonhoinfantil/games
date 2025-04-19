@@ -1,6 +1,6 @@
 import { Progress } from "@/components/ui/progress";
+import { HeaderContainer } from "../../../../components/container";
 import useGameState from "../../states";
-import { HeaderContainer } from "./container";
 import { LifeCount } from "./life";
 import { Timer } from "./timer";
 

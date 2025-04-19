@@ -19,7 +19,7 @@ export function Home() {
         <Onomatopeias />
         <div className="z-10 w-full flex flex-col items-center space-y-5 col-span-2 landscape:col-span-1">
           <Button
-            onClick={() => navigate("/quiz")}
+            onClick={() => navigate("/select")}
             className="w-3/4 h-16 bg-white hover:bg-white/80 text-black text-2xl font-bold rounded-xl"
           >
             Jogar
