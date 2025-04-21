@@ -80,7 +80,7 @@ export function Alphabet() {
         {["V", "F", "L", "M", "N", "S", "Z", "X", "J", "R"].map((letter) =>
           LetterRender({ letter, playSound })
         )}
-        <AlphabetTitle>Explosivas</AlphabetTitle>
+        <AlphabetTitle>Plosivas</AlphabetTitle>
         {["C", "B", "D", "T", "P", "Q", "G"].map((letter) =>
           LetterRender({ letter, playSound })
         )}
