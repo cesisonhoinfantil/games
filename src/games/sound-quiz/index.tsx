@@ -1,4 +1,5 @@
 import { EndGameModal } from "@/games/sound-quiz/components/endGame";
+import { Menu } from "@/games/sound-quiz/menu";
 import { useEffect } from "react";
 import { ActionButton, Header, LevelControl, Options } from "./components";
 import useGameState from "./states";
@@ -12,12 +13,19 @@ const titles = {
 };
 
 function SoundQuiz() {
+  const started = useGameState((state) => state.started);
   const difficulty = useGameState((state) => state.difficulty);
 
   useEffect(() => {
-    useGameState.getState().generateLevel();
-    console.log("generateLevel");
-  }, []);
+    if (started) {
+      useGameState.getState().generateLevel();
+      console.log("generateLevel");
+    }
+  }, [started]);
+
+  if (!started) {
+    return <Menu />;
+  }
 
   return (
     <div className="h-full w-full landscape:h-auto bg-[#74E1FF] grid grid-rows-[min-content_1fr_min-content]">

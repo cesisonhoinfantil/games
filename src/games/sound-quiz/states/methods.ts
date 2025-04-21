@@ -1,6 +1,6 @@
 import { RandomIndex, RandomItem } from "@/lib/utils";
 import { StateCreator } from "zustand";
-import { GameData, GameState } from "./interfaces";
+import { bestTiming, GameData, GameState } from "./interfaces";
 import {
   AllOptions,
   AltsExtraInfos,
@@ -13,6 +13,28 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
   set,
   get
 ) => ({
+  setConfig(config) {
+    set({
+      config,
+      life: config.maxLife,
+      difficulty: config.difficulty ?? "very easy",
+    });
+  },
+  resetConfig() {
+    set({
+      config: {
+        maxLevel: 15,
+        maxLife: 5,
+      },
+    });
+  },
+  start() {
+    set({ started: true });
+  },
+  stop() {
+    set({ started: false });
+  },
+
   select(toSelect) {
     if (toSelect == null) return;
     set({ selected: toSelect });
@@ -29,7 +51,7 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
     }
   },
   nextLevel() {
-    const { status, generateLevel, level, life } = get();
+    const { status, generateLevel, level, life, config } = get();
 
     if (!status) return;
 
@@ -49,24 +71,26 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
 
       console.log(newLevel);
 
-      switch (newLevel) {
-        case 4:
-          set({ difficulty: "easy" });
-          break;
-        case 7:
-          set({ difficulty: "medium" });
-          break;
-        case 10:
-          set({ difficulty: "hard" });
-          break;
-        case 13:
-          set({ difficulty: "very hard" });
-          break;
+      if (!config.difficulty) {
+        switch (newLevel) {
+          case 4:
+            set({ difficulty: "easy" });
+            break;
+          case 7:
+            set({ difficulty: "medium" });
+            break;
+          case 10:
+            set({ difficulty: "hard" });
+            break;
+          case 13:
+            set({ difficulty: "very hard" });
+            break;
+        }
       }
 
       history.push(options[correct!]);
 
-      if (newLevel <= 15) {
+      if (newLevel <= config.maxLevel) {
         set({ level: newLevel });
       }
 
@@ -78,13 +102,18 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
       set({ life: newLife, errors: errors + 1 });
     }
 
-    if (newLevel > 15 || newLife <= 0) {
-      const { pause, timing, bestTiming } = get();
+    if (newLevel > config.maxLevel || newLife <= 0) {
+      const { pause, timing, setBestTiming, getBestTiming } = get();
+
       pause();
-      console.log(timing, bestTiming, newLevel);
-      if ((!bestTiming || timing < bestTiming) && newLevel > 15) {
-        localStorage.setItem("bestTiming", timing.toString());
-        set({ bestTiming: timing });
+      const currentBestTiming = getBestTiming(true);
+
+      if (
+        (!currentBestTiming || timing < currentBestTiming) &&
+        newLevel > config.maxLevel
+      ) {
+        const key = config.difficulty ?? "challenge";
+        setBestTiming(timing, key);
       }
       return;
     }
@@ -147,14 +176,36 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
     });
   },
   reset() {
-    const { bestTiming } = get();
-    set({ ...InitialData, bestTiming });
+    const { bestTiming, config } = get();
+    set({ ...InitialData, config: config, bestTiming, life: config.maxLife });
   },
   pause() {
     set({ paused: !get().paused });
   },
   updateTiming(timing) {
     set({ timing });
+  },
+  getBestTiming<T extends boolean = false>(
+    current?: T
+  ): T extends true ? number : bestTiming {
+    const { config, bestTiming } = get();
+
+    const key = config.difficulty ?? "challenge";
+
+    if (current === true) {
+      return bestTiming[key] as T extends true ? number : bestTiming;
+    }
+
+    const best = JSON.parse(localStorage.getItem("bestTiming")!) as bestTiming;
+
+    return best as T extends true ? number : bestTiming;
+  },
+  setBestTiming(timing, key) {
+    const best = get().getBestTiming(false);
+    const updatedBest = { ...best, [key]: timing };
+
+    localStorage.setItem("bestTiming", JSON.stringify(updatedBest));
+    set({ bestTiming: updatedBest });
   },
 });
 
