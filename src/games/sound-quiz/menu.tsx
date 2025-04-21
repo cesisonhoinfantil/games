@@ -2,8 +2,20 @@ import DuoButton from "@/components/animata/button/duolingo";
 import { HeaderContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import useGameState from "@/games/sound-quiz/states";
-import { GameDataConfig } from "@/games/sound-quiz/states/interfaces";
+import {
+  bestTiming,
+  GameDataConfig,
+} from "@/games/sound-quiz/states/interfaces";
+import { formatTimer } from "@/lib/utils";
 import { ArrowLeft, Gamepad2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +40,63 @@ function MenuHeader() {
         <Gamepad2 />
       </div>
     </HeaderContainer>
+  );
+}
+
+function TimingTable() {
+  const BestTiming = useGameState((state) => state.bestTiming);
+
+  const getTimer = (key: keyof bestTiming) => {
+    if (!BestTiming[key]) {
+      return "--:--";
+    }
+    return formatTimer(BestTiming[key]);
+  };
+
+  return (
+    <div className="bg-white rounded-lg p-3">
+      <div className="flex">
+        <img src="/onomatopeias/png/LH.png" className="w-1/4" />
+
+        <div className="bg-white rounded-xl p-1 w-full font-bold">
+          Os melhores tempos de cada level / dificuldade
+        </div>
+      </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Level / Dificuldade</TableHead>
+            <TableHead>Melhor Tempo</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell className="font-medium">Som, figura e letra</TableCell>
+            <TableCell>{getTimer("very easy")}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Figura e letra</TableCell>
+            <TableCell>{getTimer("easy")}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Som e letra</TableCell>
+            <TableCell>{getTimer("medium")}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Figura e sons</TableCell>
+            <TableCell>{getTimer("hard")}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">Letra e sons</TableCell>
+            <TableCell>{getTimer("very hard")}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell className="font-medium">O desafio</TableCell>
+            <TableCell>{getTimer("challenge")}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
   );
 }
 
@@ -152,6 +221,7 @@ export function Menu() {
               consegue o menor tempo possível ?
             </span>
           </DuoButton>
+          <TimingTable />
         </div>
       </div>
     </div>
