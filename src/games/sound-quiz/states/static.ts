@@ -68,7 +68,7 @@ const optionsKeys = Object.keys(AllOptions) as (keyof typeof AllOptions)[];
 const InitialData: GameData = {
   life: 5,
   level: 1,
-  difficulty: "easy",
+  difficulty: "very easy",
   history: [],
   extraInfo: undefined,
 
@@ -85,6 +85,7 @@ const InitialData: GameData = {
   selected: undefined,
   correct: undefined,
   options: [],
+  imgOptions: [],
 };
 
 export { AllOptions, AltsExtraInfos, conflicts, InitialData, optionsKeys };

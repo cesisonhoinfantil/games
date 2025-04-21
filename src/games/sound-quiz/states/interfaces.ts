@@ -15,7 +15,7 @@ export interface GameData {
   life: number;
 
   level: number;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: "very easy" | "easy" | "medium" | "hard" | "very hard";
   history: string[];
   extraInfo?: string;
 
@@ -35,6 +35,7 @@ export interface GameData {
   correct?: number;
   img?: string;
   options: string[];
+  imgOptions: string[];
 }
 
 // select() - select a option

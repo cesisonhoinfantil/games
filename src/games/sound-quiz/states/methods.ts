@@ -41,8 +41,28 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
 
       newLevel = level + 1;
 
-      if (newLevel == 6) set({ difficulty: "medium" });
-      else if (newLevel == 10) set({ difficulty: "hard" });
+      // very easy - 1 - 3
+      // easy - 4 - 6
+      // medium - 7 - 9
+      // hard - 10 - 12
+      // very hard - 13 - 15
+
+      console.log(newLevel);
+
+      switch (newLevel) {
+        case 4:
+          set({ difficulty: "easy" });
+          break;
+        case 7:
+          set({ difficulty: "medium" });
+          break;
+        case 10:
+          set({ difficulty: "hard" });
+          break;
+        case 13:
+          set({ difficulty: "very hard" });
+          break;
+      }
 
       history.push(options[correct!]);
 
@@ -95,6 +115,9 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
     console.log(history[history.length - 1]);
 
     const optionsArr = Array.from(options);
+    const optionsImg = optionsArr.map(
+      (option) => AllOptions[option as keyof typeof AllOptions][0]
+    );
     let correct;
     let img;
     let option;
@@ -109,11 +132,19 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
       console.log("pass");
     } while (history[history.length - 1] == optionsArr[correct]);
 
+    optionsImg[correct] = img;
+
     if ((imageIndex > 0 || option === "Ç") && option in AltsExtraInfos) {
       extraInfo = AltsExtraInfos[option];
     }
 
-    set({ img, correct, options: optionsArr, extraInfo });
+    set({
+      img,
+      correct,
+      options: optionsArr,
+      imgOptions: optionsImg,
+      extraInfo,
+    });
   },
   reset() {
     const { bestTiming } = get();
