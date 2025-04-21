@@ -44,7 +44,7 @@ export function EndGameModal() {
   const paused = useGameState((state) => state.paused);
 
   const timing = useGameState((state) => state.timing);
-  const bestTiming = useGameState((state) => state.bestTiming);
+  const bestTiming = useGameState((state) => state.getBestTiming(true));
   const score = useGameState((state) => state.score);
   const errors = useGameState((state) => state.errors);
 
@@ -60,11 +60,19 @@ export function EndGameModal() {
   };
 
   const reset = () => {
-    const { pause, reset, generateLevel } = useGameState.getState();
+    const { pause, reset, generateLevel, start } = useGameState.getState();
 
     pause();
     reset();
     generateLevel();
+    start();
+  };
+
+  const stop = () => {
+    const { stop, reset, resetConfig } = useGameState.getState();
+    stop();
+    reset();
+    resetConfig();
   };
 
   return (
@@ -96,9 +104,15 @@ export function EndGameModal() {
           </ScoreView>
         </div>
 
-        <Button className="w-full" onClick={reset}>
-          REINICIAR
-        </Button>
+        <div className="w-full flex gap-4">
+          <Button className="w-full" onClick={stop}>
+            VOLTAR
+          </Button>
+
+          <Button className="w-full" onClick={reset}>
+            REINICIAR
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

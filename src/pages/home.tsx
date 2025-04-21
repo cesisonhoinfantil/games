@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { WarnProjectToPhone } from "@/components/warnProjectToPhone";
 import { AllOptions } from "@/games/sound-quiz/states/static";
 import { cn, debounce } from "@/lib/utils";
 import { nanoid } from "nanoid";
@@ -10,6 +11,7 @@ export function Home() {
 
   return (
     <>
+      <WarnProjectToPhone />
       <div className="w-full h-full z-10 relative place-items-center overflow-x-hidden pb-5 grid grid-cols-2 grid-rows-[min-content_1fr_min-content_min-content]">
         <img
           className="w-4/5 max-w-72 max-h-16 lg:max-w-[900px] md:max-h-[120px] col-span-2 mt-12 landscape:mt-6"

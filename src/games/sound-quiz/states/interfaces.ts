@@ -11,11 +11,31 @@
 // correct - correct option
 // options - game options
 
+type difficulty = "very easy" | "easy" | "medium" | "hard" | "very hard";
+
+export type bestTiming = {
+  "very easy": number;
+  easy: number;
+  medium: number;
+  hard: number;
+  "very hard": number;
+  challenge: number;
+};
+
+export type GameDataConfig = {
+  difficulty?: difficulty;
+  maxLevel: number;
+  maxLife: number;
+};
+
 export interface GameData {
+  config: GameDataConfig;
+  started: boolean;
+
   life: number;
 
   level: number;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: difficulty;
   history: string[];
   extraInfo?: string;
 
@@ -26,7 +46,7 @@ export interface GameData {
   paused: boolean;
 
   timing: number;
-  bestTiming: number;
+  bestTiming: bestTiming;
 
   score: number;
   errors: number;
@@ -35,6 +55,7 @@ export interface GameData {
   correct?: number;
   img?: string;
   options: string[];
+  imgOptions: string[];
 }
 
 // select() - select a option
@@ -44,6 +65,11 @@ export interface GameData {
 // reset() - go back to lvl 1 and restart
 
 export interface GameState {
+  setConfig: (config: GameDataConfig) => void;
+  resetConfig: () => void;
+  start: () => void;
+  stop: () => void;
+
   select: (toSelect: number) => void;
   verify: () => void;
   nextLevel: () => void;
@@ -52,4 +78,9 @@ export interface GameState {
 
   pause: () => void;
   updateTiming: (timing: number) => void;
+  getBestTiming: <T extends boolean = false>(
+    current?: T
+  ) => T extends true ? number : bestTiming;
+
+  setBestTiming: (timing: number, key: keyof bestTiming) => void;
 }

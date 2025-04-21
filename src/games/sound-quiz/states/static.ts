@@ -65,10 +65,40 @@ const AltsExtraInfos = {
 
 const optionsKeys = Object.keys(AllOptions) as (keyof typeof AllOptions)[];
 
+export const defaultTiming = {
+  "very easy": 0,
+  easy: 0,
+  medium: 0,
+  hard: 0,
+  "very hard": 0,
+  challenge: 0,
+};
+
+const bestTiming = () => {
+  const item = localStorage.getItem("bestTiming");
+
+  if (!item?.startsWith("{")) {
+    localStorage.setItem("bestTiming", JSON.stringify(defaultTiming));
+    return defaultTiming;
+  }
+
+  try {
+    return JSON.parse(item!) ?? defaultTiming;
+  } catch {
+    localStorage.setItem("bestTiming", JSON.stringify({}));
+  }
+};
+
 const InitialData: GameData = {
+  config: {
+    maxLevel: 15,
+    maxLife: 5,
+  },
+  started: false,
+
   life: 5,
   level: 1,
-  difficulty: "easy",
+  difficulty: "very easy",
   history: [],
   extraInfo: undefined,
 
@@ -77,7 +107,7 @@ const InitialData: GameData = {
 
   paused: false,
   timing: 0,
-  bestTiming: Number(localStorage.getItem("bestTiming")) || 0,
+  bestTiming: bestTiming(),
 
   score: 0,
   errors: 0,
@@ -85,6 +115,7 @@ const InitialData: GameData = {
   selected: undefined,
   correct: undefined,
   options: [],
+  imgOptions: [],
 };
 
 export { AllOptions, AltsExtraInfos, conflicts, InitialData, optionsKeys };
