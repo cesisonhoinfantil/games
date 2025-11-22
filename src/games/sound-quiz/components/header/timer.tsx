@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 export function Timer() {
   const paused = useGameState((state) => state.paused);
   const [Time, setTime] = useState(0);
-  const interval = useRef<NodeJS.Timeout>();
+  const interval = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
     if (paused && interval.current) {

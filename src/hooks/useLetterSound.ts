@@ -2,7 +2,7 @@ import { Howl } from "howler";
 import { useCallback, useRef } from "react";
 
 export function useLetterSound() {
-  const audio = useRef<Howl>();
+  const audio = useRef<Howl | undefined>(undefined);
 
   const playSound = useCallback((letter?: string) => {
     if (audio.current?.playing()) {
