@@ -5,11 +5,13 @@ import { nanoid } from "nanoid";
 interface SettingsState {
   zoomPrevention: boolean;
   vibrationEnabled: boolean;
+  transitionType: "slide" | "pop" | "fade" | "none";
   profileSeed: string;
   toggleZoomPrevention: () => void;
   setZoomPrevention: (value: boolean) => void;
   toggleVibrationEnabled: () => void;
   setVibrationEnabled: (value: boolean) => void;
+  setTransitionType: (value: SettingsState["transitionType"]) => void;
   generateNewProfile: () => void;
 }
 
@@ -18,6 +20,7 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       zoomPrevention: true, // vindo habilitado para desabilitar o zoom
       vibrationEnabled: true,
+      transitionType: "slide",
       profileSeed: nanoid(),
       toggleZoomPrevention: () =>
         set((state) => ({ zoomPrevention: !state.zoomPrevention })),
@@ -25,6 +28,7 @@ export const useSettingsStore = create<SettingsState>()(
       toggleVibrationEnabled: () =>
         set((state) => ({ vibrationEnabled: !state.vibrationEnabled })),
       setVibrationEnabled: (value) => set({ vibrationEnabled: value }),
+      setTransitionType: (value) => set({ transitionType: value }),
       generateNewProfile: () => set({ profileSeed: nanoid() }),
     }),
     {
