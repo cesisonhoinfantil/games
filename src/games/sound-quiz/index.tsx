@@ -1,5 +1,7 @@
 import { EndGameModal } from "@/games/sound-quiz/components/endGame";
 import { Menu } from "@/games/sound-quiz/menu";
+import { useSettingsStore } from "@/store/useSettingsStore";
+import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { ActionButton, Header, LevelControl, Options } from "./components";
 import useGameState from "./states";
@@ -12,9 +14,39 @@ const titles = {
   "very hard": "Veja a letra e escolha o som",
 };
 
-function SoundQuiz() {
+interface SoundQuizProps {
+  trailMode?: boolean;
+  trailConfig?: any;
+  onTrailFinish?: (score: number, errors: number) => void;
+}
+
+function SoundQuiz({ trailMode, trailConfig, onTrailFinish }: SoundQuizProps) {
   const started = useGameState((state) => state.started);
   const difficulty = useGameState((state) => state.difficulty);
+  const level = useGameState((state) => state.level);
+  const setConfig = useGameState((state) => state.setConfig);
+  const start = useGameState((state) => state.start);
+  const transitionType = useSettingsStore((state) => state.transitionType);
+
+  useEffect(() => {
+    if (trailMode && trailConfig && !started) {
+      setConfig({ ...trailConfig, maxLife: 3 });
+      start();
+    }
+  }, [trailMode, trailConfig, started, setConfig, start]);
+
+  const getTransitionClass = () => {
+    switch (transitionType) {
+      case "slide":
+        return "motion-preset-slide-left-sm";
+      case "pop":
+        return "motion-preset-pop";
+      case "fade":
+        return "motion-preset-fade motion-preset-blur-sm";
+      default:
+        return "";
+    }
+  };
 
   useEffect(() => {
     if (started) {
@@ -28,9 +60,12 @@ function SoundQuiz() {
   }
 
   return (
-    <div className="h-full w-full landscape:h-auto bg-[#74E1FF] grid grid-rows-[min-content_1fr_min-content]">
+    <div className="h-full w-full landscape:h-auto bg-[#74E1FF] grid grid-rows-[min-content_1fr_min-content] overflow-hidden">
       <Header />
-      <div>
+      <div
+        key={transitionType !== "none" ? level : "static"}
+        className={cn("flex flex-col flex-1", getTransitionClass())}
+      >
         <h1 className="text-xl pb-6 pt-4 pl-4 text-sky-900 tracking-tight potta-one-regular">
           {titles[difficulty]}
         </h1>
@@ -40,7 +75,7 @@ function SoundQuiz() {
         </div>
       </div>
       <LevelControl />
-      <EndGameModal />
+      <EndGameModal trailMode={trailMode} onTrailFinish={onTrailFinish} />
     </div>
   );
 }

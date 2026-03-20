@@ -32,6 +32,18 @@ function SelectHeader() {
 
 const games = [
   {
+    name: "Trilha (Experimental)",
+    url: "/trail",
+    description:
+      "Uma trilha de níveis com desafios e sistema de pontuação baseado no seu desempenho (estrelas).",
+  },
+  {
+    name: "Trato de Letra (Protótipo)",
+    url: "/tracing",
+    description:
+      "Aprenda a escrever as letras desenhando por cima delas com precisão.",
+  },
+  {
     name: "Quiz dos sons",
     url: "/quiz",
     description:

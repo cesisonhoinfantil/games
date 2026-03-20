@@ -1,5 +1,6 @@
 import Button from "@/components/animata/button/duolingo";
 import { useLetterSound } from "@/hooks/useLetterSound";
+import { sideConfetti } from "@/lib/confetti";
 import { cn } from "@/lib/utils";
 import WavesurferPlayer from "@wavesurfer/react";
 import { useCallback, useEffect, useRef } from "react";
@@ -58,7 +59,8 @@ function ButtonOption({
         className.push("col-span-2 justify-self-center w-1/2");
       }
       if (status === "win" && isSelected) {
-        className.push("motion-preset-confetti motion-duration-1000");
+        // Removed in favor of confetti lib
+        // className.push("motion-preset-confetti motion-duration-1000");
       }
       if (status === "lose" && isSelected) {
         className.push("motion-preset-shake");
@@ -110,6 +112,12 @@ export function Options() {
   const status = useGameState((state) => state.status);
   const difficulty = useGameState((state) => state.difficulty);
   const { playSound } = useLetterSound();
+
+  useEffect(() => {
+    if (status === "win") {
+      sideConfetti();
+    }
+  }, [status]);
 
   return (
     <div

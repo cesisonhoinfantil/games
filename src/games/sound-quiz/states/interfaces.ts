@@ -24,6 +24,7 @@ export type bestTiming = {
 
 export type GameDataConfig = {
   difficulty?: difficulty;
+  difficultyProgression?: Record<number, difficulty>;
   maxLevel: number;
   maxLife: number;
 };

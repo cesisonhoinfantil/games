@@ -19,6 +19,8 @@ export function ProfilePage() {
     toggleZoomPrevention,
     vibrationEnabled,
     toggleVibrationEnabled,
+    transitionType,
+    setTransitionType,
     generateNewProfile,
   } = useSettingsStore();
   const [isConfigOpen, setIsConfigOpen] = useState(true);
@@ -111,7 +113,7 @@ export function ProfilePage() {
                   </div>
                 </label>
 
-                <label className="flex items-center justify-between cursor-pointer">
+                <label className="flex items-center justify-between cursor-pointer border-b pb-4">
                   <div className="flex flex-col">
                     <span className="font-medium text-gray-800">Vibração</span>
                     <span className="text-xs text-gray-500">
@@ -131,6 +133,40 @@ export function ProfilePage() {
                     <div className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform peer-checked:translate-x-6 shadow-sm"></div>
                   </div>
                 </label>
+
+                <div className="flex flex-col gap-2">
+                  <div className="flex flex-col">
+                    <span className="font-medium text-gray-800">Transições</span>
+                    <span className="text-xs text-gray-500">
+                      Estilo da animação ao mudar de nível.
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-2 mt-1">
+                    {[
+                      { id: "none", label: "Nenhuma" },
+                      { id: "slide", label: "Slide" },
+                      { id: "pop", label: "Pop" },
+                      { id: "fade", label: "Suave" },
+                    ].map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() =>
+                          setTransitionType(
+                            type.id as "none" | "slide" | "pop" | "fade"
+                          )
+                        }
+                        className={`py-2 px-1 text-[10px] uppercase font-bold rounded-md border-2 transition-all ${
+                          transitionType === type.id
+                            ? "bg-blue-500 border-blue-600 text-white shadow-sm"
+                            : "bg-white border-gray-200 text-gray-400 hover:border-gray-300"
+                        }`}
+                      >
+                        {type.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
           </div>

@@ -1,9 +1,10 @@
 import Button from "@/components/animata/button/duolingo";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import useGameState from "@/games/sound-quiz/states";
+import { fireworkConfetti } from "@/lib/confetti";
 import { cn, formatTimer } from "@/lib/utils";
 import { Check, Clock, LucideProps, TimerIcon, X } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 const messages = {
   win: ["🎉 Parabéns, você conseguiu! 🎉"],
@@ -39,7 +40,12 @@ function ScoreView({ children, title, Icon, className }: ScoreViewProps) {
   );
 }
 
-export function EndGameModal() {
+interface EndGameModalProps {
+  trailMode?: boolean;
+  onTrailFinish?: (score: number, errors: number) => void;
+}
+
+export function EndGameModal({ trailMode, onTrailFinish }: EndGameModalProps) {
   const status = useGameState((state) => state.status ?? "lose");
   const paused = useGameState((state) => state.paused);
 
@@ -47,6 +53,12 @@ export function EndGameModal() {
   const bestTiming = useGameState((state) => state.getBestTiming(true));
   const score = useGameState((state) => state.score);
   const errors = useGameState((state) => state.errors);
+
+  useEffect(() => {
+    if (paused && status === "win") {
+      fireworkConfetti();
+    }
+  }, [paused, status]);
 
   const getImg = () => {
     const index = Math.floor(Math.random() * imgs[status].length);
@@ -73,6 +85,12 @@ export function EndGameModal() {
     stop();
     reset();
     resetConfig();
+  };
+
+  const handleTrailContinue = () => {
+    if (onTrailFinish) {
+      onTrailFinish(score, errors);
+    }
   };
 
   return (
@@ -105,13 +123,21 @@ export function EndGameModal() {
         </div>
 
         <div className="w-full flex gap-4">
-          <Button className="w-full" onClick={stop}>
-            VOLTAR
-          </Button>
+          {trailMode ? (
+            <Button className="w-full" onClick={handleTrailContinue}>
+              CONTINUAR TRILHA
+            </Button>
+          ) : (
+            <>
+              <Button className="w-full" onClick={stop}>
+                VOLTAR
+              </Button>
 
-          <Button className="w-full" onClick={reset}>
-            REINICIAR
-          </Button>
+              <Button className="w-full" onClick={reset}>
+                REINICIAR
+              </Button>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

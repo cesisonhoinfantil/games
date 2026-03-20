@@ -63,15 +63,19 @@ const createMethods: StateCreator<GameData & GameState, [], [], GameState> = (
 
       newLevel = level + 1;
 
-      // very easy - 1 - 3
-      // easy - 4 - 6
-      // medium - 7 - 9
-      // hard - 10 - 12
-      // very hard - 13 - 15
-
       console.log(newLevel);
 
-      if (!config.difficulty) {
+      if (config.difficultyProgression) {
+        const nextDifficulty = config.difficultyProgression[newLevel];
+        if (nextDifficulty) {
+          set({ difficulty: nextDifficulty });
+        }
+      } else if (!config.difficulty) {
+        // very easy - 1 - 3
+        // easy - 4 - 6
+        // medium - 7 - 9
+        // hard - 10 - 12
+        // very hard - 13 - 15
         switch (newLevel) {
           case 4:
             set({ difficulty: "easy" });
