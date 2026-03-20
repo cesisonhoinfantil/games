@@ -14,7 +14,13 @@ import { useNavigate } from "react-router-dom";
 
 export function ProfilePage() {
   const navigate = useNavigate();
-  const { zoomPrevention, toggleZoomPrevention, generateNewProfile } = useSettingsStore();
+  const {
+    zoomPrevention,
+    toggleZoomPrevention,
+    vibrationEnabled,
+    toggleVibrationEnabled,
+    generateNewProfile,
+  } = useSettingsStore();
   const [isConfigOpen, setIsConfigOpen] = useState(true);
 
   const avatarSrc = useAvatar();
@@ -82,7 +88,7 @@ export function ProfilePage() {
 
             {isConfigOpen && (
               <div className="p-4 border-t border-gray-100 bg-gray-50 space-y-4">
-                <label className="flex items-center justify-between cursor-pointer">
+                <label className="flex items-center justify-between cursor-pointer border-b pb-4">
                   <div className="flex flex-col">
                     <span className="font-medium text-gray-800">
                       Travar Zoom
@@ -99,6 +105,27 @@ export function ProfilePage() {
                       className="peer sr-only"
                       checked={zoomPrevention}
                       onChange={toggleZoomPrevention}
+                    />
+                    <div className="w-full h-full rounded-full transition-colors peer-checked:bg-green-500 bg-gray-300"></div>
+                    <div className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform peer-checked:translate-x-6 shadow-sm"></div>
+                  </div>
+                </label>
+
+                <label className="flex items-center justify-between cursor-pointer">
+                  <div className="flex flex-col">
+                    <span className="font-medium text-gray-800">Vibração</span>
+                    <span className="text-xs text-gray-500">
+                      Feedback tátil ao acertar ou errar.
+                    </span>
+                  </div>
+
+                  {/* Custom Toggle Switch */}
+                  <div className="relative inline-block w-12 h-6 rounded-full bg-gray-300">
+                    <input
+                      type="checkbox"
+                      className="peer sr-only"
+                      checked={vibrationEnabled}
+                      onChange={toggleVibrationEnabled}
                     />
                     <div className="w-full h-full rounded-full transition-colors peer-checked:bg-green-500 bg-gray-300"></div>
                     <div className="absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition-transform peer-checked:translate-x-6 shadow-sm"></div>

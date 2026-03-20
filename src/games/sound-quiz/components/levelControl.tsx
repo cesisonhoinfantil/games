@@ -4,22 +4,30 @@ import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import useSound from "use-sound";
 import useGameState from "../states";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 export function LevelControl() {
   const [win] = useSound("/sounds/effects/success.mp3", { volume: 0.7 });
   const [lose] = useSound("/sounds/effects/fail.mp3", { volume: 0.7 });
   const GameStatus = useGameState((state) => state.status);
   const selected = useGameState((state) => state.selected);
+  const vibrationEnabled = useSettingsStore((state) => state.vibrationEnabled);
 
   useEffect(() => {
     if (GameStatus) {
       if (GameStatus == "win") {
         win();
+        if (vibrationEnabled && "vibrate" in navigator) {
+          navigator.vibrate(100);
+        }
       } else {
         lose();
+        if (vibrationEnabled && "vibrate" in navigator) {
+          navigator.vibrate([200, 100, 200]);
+        }
       }
     }
-  }, [GameStatus, lose, win]);
+  }, [GameStatus, lose, win, vibrationEnabled]);
 
   return (
     <div
