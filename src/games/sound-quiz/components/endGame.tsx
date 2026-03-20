@@ -1,9 +1,10 @@
 import Button from "@/components/animata/button/duolingo";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import useGameState from "@/games/sound-quiz/states";
+import { fireworkConfetti } from "@/lib/confetti";
 import { cn, formatTimer } from "@/lib/utils";
 import { Check, Clock, LucideProps, TimerIcon, X } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 
 const messages = {
   win: ["🎉 Parabéns, você conseguiu! 🎉"],
@@ -47,6 +48,12 @@ export function EndGameModal() {
   const bestTiming = useGameState((state) => state.getBestTiming(true));
   const score = useGameState((state) => state.score);
   const errors = useGameState((state) => state.errors);
+
+  useEffect(() => {
+    if (paused && status === "win") {
+      fireworkConfetti();
+    }
+  }, [paused, status]);
 
   const getImg = () => {
     const index = Math.floor(Math.random() * imgs[status].length);
