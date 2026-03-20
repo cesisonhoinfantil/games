@@ -178,7 +178,14 @@ export function TracingGame() {
       setGabarito(null);
       handleReset();
       try {
-        const res = await fetch(`/assets/gabaritos/cursivas/${char}.json`);
+        let folder = "cursivas/mai";
+        if (/[0-9]/.test(char)) {
+          folder = "numbers";
+        } else if (char === char.toLowerCase()) {
+          folder = "cursivas/min";
+        }
+        
+        const res = await fetch(`/assets/gabaritos/${folder}/${char}.json`);
         if (!res.ok) throw new Error("Not found");
         const data = await res.json();
         setGabarito(data);
@@ -359,47 +366,67 @@ export function TracingGame() {
           </div>
         )}
 
-        <div className="grid grid-cols-7 gap-2">
-          {[
-            "A",
-            "B",
-            "C",
-            "D",
-            "E",
-            "F",
-            "G",
-            "H",
-            "I",
-            "J",
-            "K",
-            "L",
-            "M",
-            "N",
-            "O",
-            "P",
-            "Q",
-            "R",
-            "S",
-            "T",
-            "U",
-            "V",
-            "W",
-            "X",
-            "Y",
-            "Z",
-          ].map((l) => (
-            <button
-              key={l}
-              onClick={() => setLetter(l)}
-              className={`h-14 text-2xl font-black rounded-2xl transition-all ${
-                letter === l
-                  ? "bg-sky-500 text-white shadow-lg scale-110"
-                  : "bg-white text-slate-400 border-2 border-slate-100"
-              }`}
-            >
-              {l}
-            </button>
-          ))}
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">MAIÚSCULAS</h3>
+            <div className="grid grid-cols-7 gap-2">
+              {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((l) => (
+                <button
+                  key={`mai-${l}`}
+                  onClick={() => setLetter(l)}
+                  className={`h-12 text-xl font-black rounded-2xl transition-all ${
+                    letter === l
+                      ? "bg-sky-500 text-white shadow-lg scale-110"
+                      : "bg-white text-slate-400 border-2 border-slate-50 hover:border-sky-100 hover:text-sky-500"
+                  }`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-full h-px bg-slate-200"></div>
+
+          <div>
+            <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">MINÚSCULAS</h3>
+            <div className="grid grid-cols-7 gap-2">
+              {"abcdefghijklmnopqrstuvwxyz".split("").map((l) => (
+                <button
+                  key={`min-${l}`}
+                  onClick={() => setLetter(l)}
+                  className={`h-12 text-xl font-black rounded-2xl transition-all ${
+                    letter === l
+                      ? "bg-sky-500 text-white shadow-lg scale-110"
+                      : "bg-white text-slate-400 border-2 border-slate-50 hover:border-sky-100 hover:text-sky-500"
+                  }`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="w-full h-px bg-slate-200"></div>
+
+          <div>
+            <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">NÚMEROS</h3>
+            <div className="grid grid-cols-5 gap-3 max-w-sm mx-auto">
+              {"1234567890".split("").map((l) => (
+                <button
+                  key={`num-${l}`}
+                  onClick={() => setLetter(l)}
+                  className={`h-12 text-xl font-black rounded-2xl transition-all ${
+                    letter === l
+                      ? "bg-amber-500 text-white shadow-lg scale-110"
+                      : "bg-white text-slate-400 border-2 border-slate-50 hover:border-amber-100 hover:text-amber-500"
+                  }`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
