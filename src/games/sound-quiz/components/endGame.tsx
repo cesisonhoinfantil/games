@@ -40,7 +40,12 @@ function ScoreView({ children, title, Icon, className }: ScoreViewProps) {
   );
 }
 
-export function EndGameModal() {
+interface EndGameModalProps {
+  trailMode?: boolean;
+  onTrailFinish?: (score: number, errors: number) => void;
+}
+
+export function EndGameModal({ trailMode, onTrailFinish }: EndGameModalProps) {
   const status = useGameState((state) => state.status ?? "lose");
   const paused = useGameState((state) => state.paused);
 
@@ -82,6 +87,12 @@ export function EndGameModal() {
     resetConfig();
   };
 
+  const handleTrailContinue = () => {
+    if (onTrailFinish) {
+      onTrailFinish(score, errors);
+    }
+  };
+
   return (
     <Dialog open={paused}>
       <DialogContent className="flex flex-col items-center [&>button]:hidden">
@@ -112,13 +123,21 @@ export function EndGameModal() {
         </div>
 
         <div className="w-full flex gap-4">
-          <Button className="w-full" onClick={stop}>
-            VOLTAR
-          </Button>
+          {trailMode ? (
+            <Button className="w-full" onClick={handleTrailContinue}>
+              CONTINUAR TRILHA
+            </Button>
+          ) : (
+            <>
+              <Button className="w-full" onClick={stop}>
+                VOLTAR
+              </Button>
 
-          <Button className="w-full" onClick={reset}>
-            REINICIAR
-          </Button>
+              <Button className="w-full" onClick={reset}>
+                REINICIAR
+              </Button>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

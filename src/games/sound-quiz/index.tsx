@@ -14,11 +14,26 @@ const titles = {
   "very hard": "Veja a letra e escolha o som",
 };
 
-function SoundQuiz() {
+interface SoundQuizProps {
+  trailMode?: boolean;
+  trailConfig?: any;
+  onTrailFinish?: (score: number, errors: number) => void;
+}
+
+function SoundQuiz({ trailMode, trailConfig, onTrailFinish }: SoundQuizProps) {
   const started = useGameState((state) => state.started);
   const difficulty = useGameState((state) => state.difficulty);
   const level = useGameState((state) => state.level);
+  const setConfig = useGameState((state) => state.setConfig);
+  const start = useGameState((state) => state.start);
   const transitionType = useSettingsStore((state) => state.transitionType);
+
+  useEffect(() => {
+    if (trailMode && trailConfig && !started) {
+      setConfig({ ...trailConfig, maxLife: 3 });
+      start();
+    }
+  }, [trailMode, trailConfig, started, setConfig, start]);
 
   const getTransitionClass = () => {
     switch (transitionType) {
@@ -60,7 +75,7 @@ function SoundQuiz() {
         </div>
       </div>
       <LevelControl />
-      <EndGameModal />
+      <EndGameModal trailMode={trailMode} onTrailFinish={onTrailFinish} />
     </div>
   );
 }

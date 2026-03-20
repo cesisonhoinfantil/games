@@ -1,5 +1,6 @@
 import { Alphabet } from "@/games/alphabet";
 import SoundQuiz from "@/games/sound-quiz";
+import TrailGame from "@/games/trail";
 import { Credits } from "@/pages/credits";
 import { GameSelectPage } from "@/pages/gameSelect";
 import { Home } from "@/pages/home";
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/quiz",
     element: <SoundQuiz />,
+  },
+  {
+    path: "/trail",
+    element: <TrailGame />,
   },
   {
     path: "/credits",
