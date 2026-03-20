@@ -1,11 +1,13 @@
 import { HeaderContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, GamepadIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAvatar } from "@/hooks/useAvatar";
 
 function SelectHeader() {
   const navigate = useNavigate();
+  const avatarSrc = useAvatar();
 
   const goBack = () => {
     navigate(-1);
@@ -21,9 +23,9 @@ function SelectHeader() {
         <ArrowLeft />
       </Button>
       <div className="w-full text-center">Jogos</div>
-      <div className="w-1/3 flex justify-center">
-        <GamepadIcon />
-      </div>
+      <Link to="/profile" className="w-1/3 h-full flex justify-center items-center hover:bg-gray-100 rounded-md transition-colors cursor-pointer">
+        <img src={avatarSrc} alt="Perfil" className="size-8 rounded-full shadow-sm" />
+      </Link>
     </HeaderContainer>
   );
 }

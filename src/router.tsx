@@ -4,9 +4,14 @@ import { Credits } from "@/pages/credits";
 import { GameSelectPage } from "@/pages/gameSelect";
 import { Home } from "@/pages/home";
 
+import { ProfilePage } from "@/pages/profile";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
+  {
+    path: "/profile",
+    element: <ProfilePage />,
+  },
   {
     path: "/",
     element: <Home />,
