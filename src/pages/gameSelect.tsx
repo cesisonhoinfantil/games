@@ -1,7 +1,7 @@
 import { HeaderContainer } from "@/components/container";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, GamepadIcon } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 function SelectHeader() {
@@ -21,9 +21,9 @@ function SelectHeader() {
         <ArrowLeft />
       </Button>
       <div className="w-full text-center">Jogos</div>
-      <div className="w-1/3 flex justify-center">
-        <GamepadIcon />
-      </div>
+      <Link to="/profile" className="w-1/3 h-full flex justify-center items-center hover:bg-gray-100 rounded-md transition-colors cursor-pointer [&_svg]:size-6">
+        <User />
+      </Link>
     </HeaderContainer>
   );
 }
