@@ -1,4 +1,5 @@
 import { Alphabet } from "@/games/alphabet";
+import MatchGame from "@/games/match";
 import SoundQuiz from "@/games/sound-quiz";
 import TrailGame from "@/games/trail";
 import { TracingGame } from "@/games/tracing";
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/tracing",
     element: <TracingGame />,
+  },
+  {
+    path: "/match",
+    element: <MatchGame />,
   },
   {
     path: "/gabarito-editor",
