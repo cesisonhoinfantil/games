@@ -30,7 +30,9 @@ export function TracingGame() {
   const [progress, setProgress] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [penalty, setPenalty] = useState(0);
+  const [fails, setFails] = useState(0);
   const MAX_PENALTY = 100;
+  const MAX_FAILS = 3;
 
   const allDrawnStrokes = useRef<Point[][]>([]);
   const currentStrokeIndex = useRef(0);
@@ -185,7 +187,7 @@ export function TracingGame() {
         } else if (char === char.toLowerCase()) {
           folder = "cursivas/min";
         }
-        
+
         const res = await fetch(`/assets/gabaritos/${folder}/${char}.json`);
         if (!res.ok) throw new Error("Not found");
         const data = await res.json();
@@ -232,6 +234,7 @@ export function TracingGame() {
         const next = prev + 1;
         if (next >= MAX_PENALTY) {
           handleReset();
+          setFails((f) => f + 1);
           return 0;
         }
         return next;
@@ -315,7 +318,23 @@ export function TracingGame() {
         </Button>
       </div>
 
-      <div className="relative bg-white rounded-[40px] shadow-2xl overflow-hidden border-[12px] border-white ring-1 ring-slate-200">
+      <div className="relative w-full max-w-[500px] aspect-square bg-white rounded-[40px] shadow-2xl overflow-hidden border-8 sm:border-12 border-white ring-1 ring-slate-200">
+        {fails >= MAX_FAILS && (
+          <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex flex-col items-center justify-center rounded-[32px] sm:rounded-[28px]">
+            <span className="text-6xl mb-4">😢</span>
+            <h2 className="text-white text-2xl font-black mb-6 text-center px-4 leading-tight">
+              Poxa, a folha borrou muito!
+            </h2>
+            <Button
+              onClick={() => setFails(0)}
+              size="lg"
+              className="bg-sky-500 hover:bg-sky-600 text-white rounded-2xl text-xl h-14 px-8 shadow-xl"
+            >
+              <RotateCcw className="mr-2 h-6 w-6" /> Tentar Novamente
+            </Button>
+          </div>
+        )}
+
         <canvas
           ref={canvasRef}
           width={CANVAS_SIZE}
