@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useMatchStore, MatchItem } from "../stores/useMatchStore";
 import { AllOptions, optionsKeys, conflicts, AltsExtraInfos } from "../../sound-quiz/states/static";
 import { nanoid } from "nanoid";
@@ -30,7 +30,7 @@ export function useMatchLogic(pairsCount: number = 4) {
     addToHistory
   } = useMatchStore();
 
-  const getPrioritizedKeys = () => {
+  const getPrioritizedKeys = useCallback(() => {
     return [...optionsKeys].sort(() => Math.random() - 0.5).sort((a, b) => {
       const aInHistory = history.includes(a);
       const bInHistory = history.includes(b);
@@ -38,9 +38,9 @@ export function useMatchLogic(pairsCount: number = 4) {
       if (!aInHistory && bInHistory) return -1;
       return 0;
     });
-  };
+  }, [history]);
 
-  const generatePairs = () => {
+  const generatePairs = useCallback(() => {
     // 1. Pick random letter keys protecting against conflicts and history
     const selectedKeys: (keyof typeof AllOptions)[] = [];
     const prioritizedKeys = getPrioritizedKeys();
@@ -104,9 +104,9 @@ export function useMatchLogic(pairsCount: number = 4) {
     });
 
     setItems(shuffleArray(newItemsA), shuffleArray(newItemsB));
-  };
+  }, [difficulty, pairsCount, history, getPrioritizedKeys, addToHistory, setItems]);
 
-  const replaceMatched = () => {
+  const replaceMatched = useCallback(() => {
     // Find matched items and replace them with new pairs incrementally ensuring no conflicts
     const matchedItemsA = itemsA.filter(i => i.matched);
     if (matchedItemsA.length === 0) return;
@@ -181,7 +181,7 @@ export function useMatchLogic(pairsCount: number = 4) {
     if (addedKeys.length > 0) addToHistory(addedKeys);
 
     setItems(newItemsA, newItemsB);
-  };
+  }, [difficulty, itemsA, itemsB, getPrioritizedKeys, addToHistory, setItems]);
 
   // Logic to handle selection changes
   useEffect(() => {

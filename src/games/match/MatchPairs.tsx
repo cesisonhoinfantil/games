@@ -11,7 +11,6 @@ export function MatchPairs({ trailMode, onTrailFinish }: any) {
     itemsA,
     life,
     level,
-    config,
     status,
     timing,
     score,
@@ -32,10 +31,10 @@ export function MatchPairs({ trailMode, onTrailFinish }: any) {
 
   // Generate pairs only when game fully starts / restarts
   useEffect(() => {
-    if (started && itemsA.length === 0) {
+    if (started && itemsA.length === 0 && life > 0 && status !== 'lose') {
       generatePairs();
     }
-  }, [started, itemsA.length, generatePairs]);
+  }, [started, itemsA.length, life, status, generatePairs]);
 
   useEffect(() => {
     if (life <= 0 && status !== "lose") {
@@ -58,8 +57,7 @@ export function MatchPairs({ trailMode, onTrailFinish }: any) {
 
   const handleReset = () => {
     pause();
-    reset();
-    generatePairs();
+    reset(); // triggers resetGame automatically making itemsA length 0
     start();
   };
 
@@ -70,14 +68,9 @@ export function MatchPairs({ trailMode, onTrailFinish }: any) {
   };
 
   const handleNextLevel = () => {
-    useMatchStore.getState().resetGame?.(); // Prevent old matched items from re-triggering verify()
+    useMatchStore.getState().resetGame?.(); 
     nextLevel();
-    if (
-      useMatchStore.getState().life > 0 &&
-      useMatchStore.getState().level <= config.maxLevel
-    ) {
-      setTimeout(generatePairs, 500);
-    }
+    generatePairs();
   };
 
   return (

@@ -15,9 +15,11 @@ export function MatchMadness({ trailMode, onTrailFinish }: any) {
   const [timeRemaining, setTimeRemaining] = useState(105); // 1m45s
 
   useEffect(() => {
-    generatePairs();
+    if (itemsA.length === 0 && score === 0) {
+      generatePairs();
+    }
     start();
-  }, [generatePairs, start]);
+  }, [generatePairs, itemsA.length, score, start]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,9 +40,10 @@ export function MatchMadness({ trailMode, onTrailFinish }: any) {
   useEffect(() => {
     const hasMatches = itemsA.some(i => i.matched);
     if (hasMatches) {
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         replaceMatched();
       }, 300);
+      return () => clearTimeout(timeout);
     }
   }, [itemsA, replaceMatched]);
 
@@ -48,7 +51,7 @@ export function MatchMadness({ trailMode, onTrailFinish }: any) {
     pause();
     reset();
     setTimeRemaining(105);
-    generatePairs();
+    // Let the useEffect handle the generation when itemsA turns 0!
     start();
   };
 
