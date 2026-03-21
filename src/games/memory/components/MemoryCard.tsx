@@ -1,5 +1,5 @@
-import { MemoryCard as MemoryCardType } from "../types";
 import { cn } from "@/lib/utils";
+import { MemoryCard as MemoryCardType } from "../types";
 
 interface MemoryCardProps {
   card: MemoryCardType;
@@ -12,14 +12,17 @@ export function MemoryCard({ card, onClick, disabled }: MemoryCardProps) {
   // For simplicity, we assume the sound card has a generic icon and plays sound when flipped.
   const handleClick = () => {
     if (disabled || card.flipped || card.matched) return;
-    
+
     const uiSound = new Audio("/sounds/ui/plope.mp3");
     uiSound.volume = 0.5;
     uiSound.play().catch(() => {});
 
     if (card.playSoundOnClick || card.type === "sound") {
       const vol = card.type === "sound" ? 1 : 0.6;
-      const soundUrl = card.type === "sound" ? `/onomatopeias/audios/${card.value}.mp3` : `/onomatopeias/audios/${card.letterKey}.mp3`;
+      const soundUrl =
+        card.type === "sound"
+          ? `/onomatopeias/audios/${card.value}.mp3`
+          : `/onomatopeias/audios/${card.letterKey}.mp3`;
       const itemSound = new Audio(soundUrl);
       itemSound.volume = vol;
       itemSound.play().catch(() => {});
@@ -54,7 +57,11 @@ export function MemoryCard({ card, onClick, disabled }: MemoryCardProps) {
     if (card.type === "sound") {
       return (
         <div className="flex items-center justify-center w-full h-full">
-          <img src="/icons/sound-icon.png" alt="Sound" className="w-1/2 h-1/2 object-contain opacity-50" />
+          <img
+            src="/icons/sound-icon.png"
+            alt="Sound"
+            className="w-1/2 h-1/2 object-contain opacity-50"
+          />
         </div>
       );
     }
@@ -64,36 +71,74 @@ export function MemoryCard({ card, onClick, disabled }: MemoryCardProps) {
   return (
     <div
       className={cn(
-        "relative rounded-xl shadow-sm border-b-4 transition-transform select-none cursor-pointer",
-        card.error ? "border-red-500" : card.success ? "border-green-500" : "border-slate-300",
-        "bg-white"
+        "relative w-full aspect-square rounded-[16%] shadow-sm select-none cursor-pointer bg-transparent",
+        "perspective-[1000px]",
       )}
       onClick={handleClick}
-      style={{
-        perspective: "1000px",
-        transformStyle: "preserve-3d",
-      }}
     >
       <div
         className={cn(
-          "w-full h-full absolute top-0 left-0 transition-all duration-500 rounded-xl",
-          card.flipped || card.matched ? "opacity-100 z-10 scale-100" : "opacity-0 z-0 scale-95"
+          "relative w-full h-full duration-500 transform-3d transition-transform",
+          card.flipped || card.matched ? "transform-[rotateY(180deg)]" : "",
         )}
       >
-        {renderContent()}
-      </div>
+        {/* Front face (Card Back Cover) */}
+        <div
+          className={cn(
+            "absolute inset-0 w-full h-full backface-hidden [-webkit-backface-visibility:hidden] border-b-4",
+            card.error
+              ? "border-red-500"
+              : card.success
+                ? "border-green-500"
+                : "border-slate-300",
+          )}
+          style={{ borderRadius: "16%" }}
+        >
+          {/* Camada 1: White Card Base */}
+          <div
+            className="w-full h-full bg-white flex items-center justify-center overflow-hidden"
+            style={{ padding: "2%", borderRadius: "16%" }}
+          >
+            {/* Camada 2: Striped Background with #4092c5 border */}
+            <div
+              className="w-full h-full flex items-center justify-center border-2 sm:border-[3px] border-[#4092c5]"
+              style={{
+                padding: "3.5%",
+                borderRadius: "16%",
+                backgroundImage:
+                  "repeating-linear-gradient(-45deg, #7dd3fc 0, #7dd3fc 8px, #ffffff 8px, #ffffff 16px)",
+              }}
+            >
+              {/* Camada 3: Logo Image */}
+              <div
+                className="w-full h-full overflow-hidden flex items-center justify-center bg-sky-200"
+                style={{ borderRadius: "20%" }}
+              >
+                <img
+                  src="/onomatopeias/logo-caligrafando.png"
+                  className="w-full h-full object-cover pointer-events-none"
+                  alt="Logo Caligrafando"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <div
-        className={cn(
-          "w-full h-full absolute top-0 left-0 bg-sky-400 rounded-xl flex items-center justify-center transition-all duration-500 border-2 border-sky-500",
-          card.flipped || card.matched ? "opacity-0 z-0 scale-95" : "opacity-100 z-10 scale-100"
-        )}
-      >
-        <div className="w-8 h-8 rounded-full bg-white/30 text-white font-bold flex items-center justify-center">?</div>
+        {/* Back face (Card Content) */}
+        <div
+          className={cn(
+            "absolute inset-0 w-full h-full bg-white backface-hidden [-webkit-backface-visibility:hidden] transform-[rotateY(180deg)] border-b-4 flex items-center justify-center",
+            card.error
+              ? "border-red-500"
+              : card.success
+                ? "border-green-500"
+                : "border-slate-300",
+          )}
+          style={{ borderRadius: "16%" }}
+        >
+          {renderContent()}
+        </div>
       </div>
-      
-      {/* Invisible spacer to maintain cell aspect ratio */}
-      <div className="w-full pb-[100%]"></div>
     </div>
   );
 }
