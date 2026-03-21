@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
-import { Volume2 } from "lucide-react";
 import { MatchItem } from "../stores/useMatchStore";
+import WavesurferPlayer from "@wavesurfer/react";
+import WaveSurfer from "wavesurfer.js";
+import { useEffect, useRef } from "react";
 
 interface MatchTileProps {
   item: MatchItem;
@@ -15,8 +17,31 @@ export function MatchTile({
   onClick,
   disabled,
 }: MatchTileProps) {
+  const wave = useRef<WaveSurfer | null>(null);
+
+  useEffect(() => {
+    if (wave.current) {
+      let color = "#38bdf8"; // sky-400
+      if (item.matched) color = "#9ca3af"; // gray-400
+      else if (item.error) color = "#ef4444"; // red-500
+      else if (item.success) color = "#22c55e"; // green-500
+      else if (isSelected) color = "#0284c7"; // sky-600
+
+      wave.current.setOptions({
+        waveColor: color,
+        progressColor: "#0f172a", // slate-900 for progress
+      });
+    }
+  }, [isSelected, item.matched, item.error, item.success]);
+
   const playSound = () => {
     if (item.type === "sound" || item.playSoundOnClick) {
+      if (item.type === "sound" && wave.current) {
+        wave.current.play();
+      } else {
+        const audio = new Audio(`/sounds/onomatopeias/${item.value}.mp3`);
+        audio.play();
+      }
     }
   };
 
@@ -80,12 +105,20 @@ export function MatchTile({
         />
       )}
       {item.type === "sound" && (
-        <Volume2
-          className={cn(
-            "h-10 w-10",
-            item.matched ? "text-gray-400" : "text-sky-500",
-          )}
-        />
+        <div className={cn("w-full px-4", item.matched && "opacity-50 pointer-events-none grayscale")}>
+          <WavesurferPlayer
+            height={40}
+            barWidth={3}
+            barGap={2}
+            waveColor={"#38bdf8"}
+            progressColor={"#0f172a"}
+            interact={false}
+            cursorWidth={0}
+            url={`/sounds/onomatopeias/${item.value}.mp3`}
+            normalize
+            onReady={(ws) => (wave.current = ws)}
+          />
+        </div>
       )}
     </button>
   );
