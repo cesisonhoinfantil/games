@@ -237,12 +237,16 @@ function LetterButton({
       </div>
       <div
         className={cn(
-          "w-full grow flex flex-col items-center justify-center",
-          img && "hidden",
+          "w-full grow flex flex-col items-center justify-center transition-all",
         )}
       >
         {mode === "4formas" ? (
-          <div className="grid grid-cols-2 grid-rows-2 w-full h-full items-center justify-center text-4xl gap-y-1 gap-x-2 p-1">
+          <div
+            className={cn(
+              "grid grid-cols-2 grid-rows-2 w-full items-center justify-center gap-y-1 gap-x-2 p-1 transition-all",
+              img ? "text-xl scale-75" : "text-4xl",
+            )}
+          >
             <span
               className={cn(
                 "font-bold text-center leading-none",
@@ -280,8 +284,13 @@ function LetterButton({
           <div
             className={cn(
               "transition-all duration-500",
-              img ? "text-3xl" : "text-6xl font-bold",
-              mode === "cursiva" &&
+              img && mode !== "cursiva" ? "text-4xl font-bold" : "",
+              !img && mode !== "cursiva" ? "text-6xl font-bold" : "",
+              img &&
+                mode === "cursiva" &&
+                "font-cursive text-5xl font-normal tracking-wide whitespace-pre",
+              !img &&
+                mode === "cursiva" &&
                 "font-cursive text-7xl font-normal tracking-wide whitespace-pre",
             )}
           >
@@ -294,7 +303,27 @@ function LetterButton({
                 : formatLower(info)}
           </div>
         )}
-        {!img && extra && <div className="text-sm mt-1">{extra}</div>}
+        {extra && (
+          <div
+            className={cn(
+              "text-center",
+              mode === "cursiva"
+                ? "font-cursive font-normal tracking-wide whitespace-pre"
+                : "font-bold",
+              img
+                ? mode === "cursiva"
+                  ? "text-3xl mt-2"
+                  : "text-2xl mt-2"
+                : mode === "cursiva"
+                  ? "text-xl mt-1"
+                  : "text-sm mt-1",
+            )}
+          >
+            {mode === "cursiva"
+              ? extra.toLowerCase().replace("(", "").replace(")", "")
+              : extra}
+          </div>
+        )}
       </div>
     </DuoButton>
   );
