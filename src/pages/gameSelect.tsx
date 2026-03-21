@@ -61,6 +61,12 @@ const games = [
     description:
       "Faça combinações de Onomatopeias, Letras e Sons! Jogue no modo Clássico ou o Desafio do Tempo.",
   },
+  {
+    name: "Jogo da Memória",
+    url: "/memory",
+    description:
+      "Encontre os pares correspondentes! Vire as cartas e associe Letras, Constelações e Sons.",
+  },
 ];
 
 export function GameSelectPage() {
