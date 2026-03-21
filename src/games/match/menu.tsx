@@ -43,7 +43,7 @@ export function MatchMenu() {
     setStep("difficulty");
   };
 
-  const selectDifficulty = (difficulty: "easy" | "medium" | "hard") => {
+  const selectDifficulty = (difficulty: "very easy" | "easy" | "medium" | "hard" | "very hard") => {
     setConfig({ difficulty, maxLife: 5, maxLevel: 15 });
     start();
   };
@@ -105,12 +105,24 @@ export function MatchMenu() {
             <DuoButton
               affect="whitespace-pre-wrap"
               variants="success"
-              onClick={() => selectDifficulty("easy")}
+              onClick={() => selectDifficulty("very easy")}
             >
-              <div className="text-xl">Fácil (Figura e Letra)</div>
+              <div className="text-xl">1. Muito Fácil (Som, Figura e Letra)</div>
               <Separator className="my-1" />
               <span>
-                Associe a Onomatopeia (Figura) com a sua Letra inicial.
+                Toque na Onomatopeia para ouvir o som e associe com a Letra!
+              </span>
+            </DuoButton>
+
+            <DuoButton
+              affect="whitespace-pre-wrap"
+              variants="white"
+              onClick={() => selectDifficulty("easy")}
+            >
+              <div className="text-xl">2. Fácil (Figura e Letra)</div>
+              <Separator className="my-1" />
+              <span>
+                Faça a associação visual da Onomatopeia com a sua Letra inicial.
               </span>
             </DuoButton>
 
@@ -119,7 +131,7 @@ export function MatchMenu() {
               variants="white"
               onClick={() => selectDifficulty("medium")}
             >
-              <div className="text-xl">Médio (Som e Figura)</div>
+              <div className="text-xl">3. Médio (Som e Figura)</div>
               <Separator className="my-1" />
               <span>
                 Escute o Som e associe com a Onomatopeia correspondente.
@@ -131,10 +143,23 @@ export function MatchMenu() {
               variants="error"
               onClick={() => selectDifficulty("hard")}
             >
-              <div className="text-xl">Difícil (Som e Letra)</div>
+              <div className="text-xl">4. Difícil (Som e Letra)</div>
               <Separator className="my-1" />
               <span>
                 Escute o Som e associe diretamente com a Letra!
+              </span>
+            </DuoButton>
+
+            <DuoButton
+              affect="whitespace-pre-wrap"
+              variants="default"
+              className="bg-purple-500 border-purple-700 text-white"
+              onClick={() => selectDifficulty("very hard")}
+            >
+              <div className="text-xl">5. Desafio (Todos os tipos)</div>
+              <Separator className="my-1" />
+              <span className="text-white/90">
+                Uma surpresa a cada carta! Diferentes combinações ao mesmo tempo.
               </span>
             </DuoButton>
           </div>

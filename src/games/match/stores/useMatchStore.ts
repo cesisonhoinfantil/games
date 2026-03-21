@@ -15,6 +15,7 @@ export interface MatchItem {
   success?: boolean;
   extraInfo?: string;
   letterKey?: string;
+  playSoundOnClick?: boolean;
 }
 
 export interface MatchGameState {

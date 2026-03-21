@@ -16,9 +16,7 @@ export function MatchTile({
   disabled,
 }: MatchTileProps) {
   const playSound = () => {
-    if (item.type === "sound") {
-      const audio = new Audio(`/sounds/onomatopeias/${item.value}.mp3`);
-      audio.play();
+    if (item.type === "sound" || item.playSoundOnClick) {
     }
   };
 

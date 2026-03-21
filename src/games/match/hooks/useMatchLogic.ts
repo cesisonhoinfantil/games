@@ -78,11 +78,20 @@ export function useMatchLogic(pairsCount: number = 4) {
 
       let itemA: MatchItem;
       let itemB: MatchItem;
+      
+      let currentDiff = difficulty;
+      if (currentDiff === "very hard" || currentDiff === "challenge" as any) {
+        const diffs = ["very easy", "easy", "medium", "hard"];
+        currentDiff = diffs[Math.floor(Math.random() * diffs.length)] as any;
+      }
 
-      if (difficulty === "easy") {
+      if (currentDiff === "very easy") {
+        itemA = { id: nanoid(), value: randomImageId, type: "image", pairId, matched: false, letterKey: letter, playSoundOnClick: true };
+        itemB = { id: nanoid(), value: letter, type: "letter", pairId, matched: false, extraInfo, letterKey: letter };
+      } else if (currentDiff === "easy") {
         itemA = { id: nanoid(), value: randomImageId, type: "image", pairId, matched: false, letterKey: letter };
         itemB = { id: nanoid(), value: letter, type: "letter", pairId, matched: false, extraInfo, letterKey: letter };
-      } else if (difficulty === "medium") {
+      } else if (currentDiff === "medium") {
         itemA = { id: nanoid(), value: randomImageId, type: "sound", pairId, matched: false, letterKey: letter };
         itemB = { id: nanoid(), value: randomImageId, type: "image", pairId, matched: false, letterKey: letter };
       } else { // hard
@@ -144,10 +153,19 @@ export function useMatchLogic(pairsCount: number = 4) {
         let itemA: MatchItem;
         let itemB: MatchItem;
 
-        if (difficulty === "easy") {
+        let currentDiff = difficulty;
+        if (currentDiff === "very hard" || currentDiff === "challenge" as any) {
+          const diffs = ["very easy", "easy", "medium", "hard"];
+          currentDiff = diffs[Math.floor(Math.random() * diffs.length)] as any;
+        }
+
+        if (currentDiff === "very easy") {
+          itemA = { id: nanoid(), value: randomImageId, type: "image", pairId, matched: false, letterKey: selectedLetter, playSoundOnClick: true };
+          itemB = { id: nanoid(), value: selectedLetter, type: "letter", pairId, matched: false, extraInfo, letterKey: selectedLetter };
+        } else if (currentDiff === "easy") {
           itemA = { id: nanoid(), value: randomImageId, type: "image", pairId, matched: false, letterKey: selectedLetter };
           itemB = { id: nanoid(), value: selectedLetter, type: "letter", pairId, matched: false, extraInfo, letterKey: selectedLetter };
-        } else if (difficulty === "medium") {
+        } else if (currentDiff === "medium") {
           itemA = { id: nanoid(), value: randomImageId, type: "sound", pairId, matched: false, letterKey: selectedLetter };
           itemB = { id: nanoid(), value: randomImageId, type: "image", pairId, matched: false, letterKey: selectedLetter };
         } else {
