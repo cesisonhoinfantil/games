@@ -1,8 +1,8 @@
 import { StateCreator } from "zustand";
-import { BaseGameState, bestTiming } from "./interfaces";
+import { BaseGameState, bestTiming, GameBaseActions } from "./interfaces";
 import { InitialBaseData } from "./static";
 
-export const createBaseMethods = <T extends BaseGameState>(): StateCreator<T, [], [], BaseGameState> => (set, get) => ({
+export const createBaseMethods = <T extends BaseGameState>(): StateCreator<T, [], [], GameBaseActions> => (set, get) => ({
   setConfig: (config) => {
     set({
       config,

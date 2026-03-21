@@ -13,8 +13,8 @@ import {
 import useGameState from "@/games/sound-quiz/states";
 import {
   bestTiming,
-  GameDataConfig,
-} from "@/games/sound-quiz/states/interfaces";
+  GameBaseConfig,
+} from "@/games/base/store/interfaces";
 import { formatTimer } from "@/lib/utils";
 import { ArrowLeft, Gamepad2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -101,7 +101,7 @@ function TimingTable() {
 }
 
 export function Menu() {
-  const setConfig = (config: Partial<GameDataConfig>) => {
+  const setConfig = (config: Partial<GameBaseConfig>) => {
     const { setConfig, start } = useGameState.getState();
     setConfig({ maxLevel: 15, maxLife: 5, ...config });
     start();

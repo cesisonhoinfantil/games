@@ -1,4 +1,4 @@
-import { GameBaseData, bestTiming, defaultTiming } from "./interfaces";
+import { GameBaseData, bestTiming } from "./interfaces";
 
 export const DefaultTiming: bestTiming = {
   "very easy": 0,
