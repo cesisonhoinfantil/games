@@ -1,6 +1,5 @@
 import Button from "@/components/animata/button/duolingo";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import useGameState from "@/games/sound-quiz/states";
 import { fireworkConfetti } from "@/lib/confetti";
 import { cn, formatTimer } from "@/lib/utils";
 import { Check, Clock, LucideProps, TimerIcon, X } from "lucide-react";
@@ -40,20 +39,31 @@ function ScoreView({ children, title, Icon, className }: ScoreViewProps) {
   );
 }
 
-interface EndGameModalProps {
+export interface GameEndModalProps {
   trailMode?: boolean;
   onTrailFinish?: (score: number, errors: number) => void;
+  status?: "win" | "lose";
+  paused: boolean;
+  timing: number;
+  bestTiming?: number;
+  score: number;
+  errors: number;
+  onReset: () => void;
+  onStop: () => void;
 }
 
-export function EndGameModal({ trailMode, onTrailFinish }: EndGameModalProps) {
-  const status = useGameState((state) => state.status ?? "lose");
-  const paused = useGameState((state) => state.paused);
-
-  const timing = useGameState((state) => state.timing);
-  const bestTiming = useGameState((state) => state.getBestTiming(true));
-  const score = useGameState((state) => state.score);
-  const errors = useGameState((state) => state.errors);
-
+export function GameEndModal({
+  trailMode,
+  onTrailFinish,
+  status = "lose",
+  paused,
+  timing,
+  bestTiming,
+  score,
+  errors,
+  onReset,
+  onStop,
+}: GameEndModalProps) {
   useEffect(() => {
     if (paused && status === "win") {
       fireworkConfetti();
@@ -69,22 +79,6 @@ export function EndGameModal({ trailMode, onTrailFinish }: EndGameModalProps) {
   const getMsg = () => {
     const index = Math.floor(Math.random() * messages[status].length);
     return messages[status][index];
-  };
-
-  const reset = () => {
-    const { pause, reset, generateLevel, start } = useGameState.getState();
-
-    pause();
-    reset();
-    generateLevel();
-    start();
-  };
-
-  const stop = () => {
-    const { stop, reset, resetConfig } = useGameState.getState();
-    stop();
-    reset();
-    resetConfig();
   };
 
   const handleTrailContinue = () => {
@@ -129,11 +123,11 @@ export function EndGameModal({ trailMode, onTrailFinish }: EndGameModalProps) {
             </Button>
           ) : (
             <>
-              <Button className="w-full" onClick={stop}>
+              <Button className="w-full" onClick={onStop}>
                 VOLTAR
               </Button>
 
-              <Button className="w-full" onClick={reset}>
+              <Button className="w-full" onClick={onReset}>
                 REINICIAR
               </Button>
             </>

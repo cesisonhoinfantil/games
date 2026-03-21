@@ -55,6 +55,12 @@ const games = [
     description:
       "Um alfabeto com as onomatopeias e suas variações, escute os sons e veja as onomatopeias",
   },
+  {
+    name: "Associação (Match)",
+    url: "/match",
+    description:
+      "Faça combinações de Onomatopeias, Letras e Sons! Jogue no modo Clássico ou o Desafio do Tempo.",
+  },
 ];
 
 export function GameSelectPage() {

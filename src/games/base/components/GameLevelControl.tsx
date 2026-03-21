@@ -3,19 +3,23 @@ import { Status } from "@/components/status";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import useSound from "use-sound";
-import useGameState from "../states";
 import { useSettingsStore } from "@/store/useSettingsStore";
 
-export function LevelControl() {
+export interface GameLevelControlProps {
+  status?: "win" | "lose";
+  selected?: number | string | null;
+  onVerify: () => void;
+  onNextLevel: () => void;
+}
+
+export function GameLevelControl({ status, selected, onVerify, onNextLevel }: GameLevelControlProps) {
   const [win] = useSound("/sounds/effects/success.mp3", { volume: 0.7 });
   const [lose] = useSound("/sounds/effects/fail.mp3", { volume: 0.7 });
-  const GameStatus = useGameState((state) => state.status);
-  const selected = useGameState((state) => state.selected);
   const vibrationEnabled = useSettingsStore((state) => state.vibrationEnabled);
 
   useEffect(() => {
-    if (GameStatus) {
-      if (GameStatus == "win") {
+    if (status) {
+      if (status == "win") {
         win();
         if (vibrationEnabled && "vibrate" in navigator) {
           navigator.vibrate(100);
@@ -27,30 +31,29 @@ export function LevelControl() {
         }
       }
     }
-  }, [GameStatus, lose, win, vibrationEnabled]);
+  }, [status, lose, win, vibrationEnabled]);
 
   return (
     <div
       className={cn(
         "w-full h-full flex justify-center items-end py-6 relative z-10",
-        GameStatus && "fixed h-1/4 bottom-0"
+        status && "fixed h-1/4 bottom-0"
       )}
     >
-      {GameStatus && (
+      {status && (
         <Status
           className="motion-preset-slide-up-md"
-          variant={GameStatus == "win" ? "success" : "error"}
+          variant={status == "win" ? "success" : "error"}
         />
       )}
       <Button
         className="w-2/3"
-        variants={GameStatus == "lose" ? "error" : "white"}
+        variants={status == "lose" ? "error" : "white"}
         onClick={() => {
-          const { verify, nextLevel, status } = useGameState.getState();
           if (status) {
-            nextLevel();
+            onNextLevel();
           } else {
-            verify();
+            onVerify();
           }
         }}
         disabled={selected == null}
