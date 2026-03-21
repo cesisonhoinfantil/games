@@ -1,24 +1,25 @@
 import { Progress } from "@/components/ui/progress";
-import { HeaderContainer } from "../../../../components/container";
-import useGameState from "../../states";
-import { LifeCount } from "./life";
-import { Timer } from "./timer";
+import { HeaderContainer } from "@/components/container";
+import { GameLifeCount } from "./GameLifeCount";
+import { GameTimer } from "./GameTimer";
 
-interface HeaderProps {
+interface GameHeaderProps {
   variant?: "endless" | "progress";
   end?: number;
+  level: number;
+  life: number;
+  paused: boolean;
+  onUpdateTiming: (time: number) => void;
 }
 
-export function Header({ variant = "endless", end = 15 }: HeaderProps) {
-  const level = useGameState((state) => state.level);
-
+export function GameHeader({ variant = "endless", end = 15, level, life, paused, onUpdateTiming }: GameHeaderProps) {
   if (variant === "progress") {
     return (
       <HeaderContainer>
         <div className="w-full h-12 flex items-center">
           <Progress className="h-[10px]" value={(level / end) * 100} />
         </div>
-        <LifeCount />
+        <GameLifeCount life={life} />
       </HeaderContainer>
     );
   }
@@ -31,8 +32,8 @@ export function Header({ variant = "endless", end = 15 }: HeaderProps) {
           <p className="-mt-2 tracking-tighter">{level}</p>
         </div>
       </div>
-      <Timer />
-      <LifeCount />
+      <GameTimer paused={paused} onUpdateTiming={onUpdateTiming} />
+      <GameLifeCount life={life} />
     </HeaderContainer>
   );
 }

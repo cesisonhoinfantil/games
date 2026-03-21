@@ -1,10 +1,12 @@
-import { EndGameModal } from "@/games/sound-quiz/components/endGame";
 import { Menu } from "@/games/sound-quiz/menu";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
-import { ActionButton, Header, LevelControl, Options } from "./components";
+import { ActionButton, Options } from "./components";
 import useGameState from "./states";
+import { GameHeader } from "@/games/base/components/GameHeader";
+import { GameLevelControl } from "@/games/base/components/GameLevelControl";
+import { GameEndModal } from "@/games/base/components/GameEndModal";
 
 const titles = {
   "very easy": "Veja, escute e escolha a letra",
@@ -24,8 +26,26 @@ function SoundQuiz({ trailMode, trailConfig, onTrailFinish }: SoundQuizProps) {
   const started = useGameState((state) => state.started);
   const difficulty = useGameState((state) => state.difficulty);
   const level = useGameState((state) => state.level);
+  const life = useGameState((state) => state.life);
+  const paused = useGameState((state) => state.paused);
+  const status = useGameState((state) => state.status);
+  const selected = useGameState((state) => state.selected);
+  const timing = useGameState((state) => state.timing);
+  const bestTiming = useGameState((state) => state.getBestTiming(true));
+  const score = useGameState((state) => state.score);
+  const errors = useGameState((state) => state.errors);
+  
   const setConfig = useGameState((state) => state.setConfig);
   const start = useGameState((state) => state.start);
+  const updateTiming = useGameState((state) => state.updateTiming);
+  const verify = useGameState((state) => state.verify);
+  const nextLevel = useGameState((state) => state.nextLevel);
+  const reset = useGameState((state) => state.reset);
+  const stop = useGameState((state) => state.stop);
+  const resetConfig = useGameState((state) => state.resetConfig);
+  const generateLevel = useGameState((state) => state.generateLevel);
+  const pause = useGameState((state) => state.pause);
+  
   const transitionType = useSettingsStore((state) => state.transitionType);
 
   useEffect(() => {
@@ -51,7 +71,6 @@ function SoundQuiz({ trailMode, trailConfig, onTrailFinish }: SoundQuizProps) {
   useEffect(() => {
     if (started) {
       useGameState.getState().generateLevel();
-      console.log("generateLevel");
     }
   }, [started]);
 
@@ -59,9 +78,27 @@ function SoundQuiz({ trailMode, trailConfig, onTrailFinish }: SoundQuizProps) {
     return <Menu />;
   }
 
+  const handleReset = () => {
+    pause();
+    reset();
+    generateLevel();
+    start();
+  };
+
+  const handleStop = () => {
+    stop();
+    reset();
+    resetConfig();
+  };
+
   return (
     <div className="h-full w-full landscape:h-auto bg-[#74E1FF] grid grid-rows-[min-content_1fr_min-content] overflow-hidden">
-      <Header />
+      <GameHeader 
+        level={level} 
+        life={life} 
+        paused={paused} 
+        onUpdateTiming={updateTiming} 
+      />
       <div
         key={transitionType !== "none" ? level : "static"}
         className={cn("flex flex-col flex-1", getTransitionClass())}
@@ -74,8 +111,24 @@ function SoundQuiz({ trailMode, trailConfig, onTrailFinish }: SoundQuizProps) {
           <Options />
         </div>
       </div>
-      <LevelControl />
-      <EndGameModal trailMode={trailMode} onTrailFinish={onTrailFinish} />
+      <GameLevelControl 
+        status={status}
+        selected={selected}
+        onVerify={verify}
+        onNextLevel={nextLevel}
+      />
+      <GameEndModal 
+        trailMode={trailMode} 
+        onTrailFinish={onTrailFinish}
+        status={status}
+        paused={paused}
+        timing={timing}
+        bestTiming={bestTiming}
+        score={score}
+        errors={errors}
+        onReset={handleReset}
+        onStop={handleStop}
+      />
     </div>
   );
 }

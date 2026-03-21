@@ -1,4 +1,5 @@
 import { GameData } from "./interfaces";
+import { InitialBaseData } from "@/games/base/store/static";
 
 const AllOptions = {
   A: ["A", "A2"],
@@ -65,52 +66,10 @@ const AltsExtraInfos = {
 
 const optionsKeys = Object.keys(AllOptions) as (keyof typeof AllOptions)[];
 
-export const defaultTiming = {
-  "very easy": 0,
-  easy: 0,
-  medium: 0,
-  hard: 0,
-  "very hard": 0,
-  challenge: 0,
-};
-
-const bestTiming = () => {
-  const item = localStorage.getItem("bestTiming");
-
-  if (!item?.startsWith("{")) {
-    localStorage.setItem("bestTiming", JSON.stringify(defaultTiming));
-    return defaultTiming;
-  }
-
-  try {
-    return JSON.parse(item!) ?? defaultTiming;
-  } catch {
-    localStorage.setItem("bestTiming", JSON.stringify({}));
-  }
-};
-
 const InitialData: GameData = {
-  config: {
-    maxLevel: 15,
-    maxLife: 5,
-  },
-  started: false,
-
-  life: 5,
-  level: 1,
-  difficulty: "very easy",
+  ...InitialBaseData,
   history: [],
   extraInfo: undefined,
-
-  startAt: undefined,
-  status: undefined,
-
-  paused: false,
-  timing: 0,
-  bestTiming: bestTiming(),
-
-  score: 0,
-  errors: 0,
 
   selected: undefined,
   correct: undefined,
