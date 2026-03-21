@@ -13,6 +13,7 @@ export interface MatchItem {
   matched: boolean;
   error?: boolean;
   success?: boolean;
+  loading?: boolean;
   extraInfo?: string;
   letterKey?: string;
   playSoundOnClick?: boolean;
@@ -30,6 +31,7 @@ export interface MatchGameState {
 
   setMode: (mode: MatchMode) => void;
   setItems: (itemsA: MatchItem[], itemsB: MatchItem[]) => void;
+  setItemsLoading: (ids: string[], isLoading: boolean) => void;
   addToHistory: (keys: string[]) => void;
   
   selectItemA: (id: string) => void;
@@ -78,6 +80,10 @@ export const useMatchStore = create<MatchState>()((set, get, api) => {
     // Specific methods
     setMode: (mode) => set({ mode }),
     setItems: (itemsA, itemsB) => set({ itemsA, itemsB }),
+    setItemsLoading: (ids, isLoading) => set((state) => ({
+      itemsA: state.itemsA.map(item => ids.includes(item.id) ? { ...item, loading: isLoading } : item),
+      itemsB: state.itemsB.map(item => ids.includes(item.id) ? { ...item, loading: isLoading } : item),
+    })),
     addToHistory: (keys) => set((state) => {
       const newHistory = [...state.history, ...keys];
       if (newHistory.length > 12) {

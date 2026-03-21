@@ -8,11 +8,14 @@ import { formatTimer } from "@/lib/utils";
 
 export function MatchMadness({ trailMode, onTrailFinish }: any) {
   const { 
-    itemsA, score, errors, reset, start, stop, pause, getBestTiming, resetConfig, updateTiming 
+    itemsA, itemsB, score, errors, reset, start, stop, pause, getBestTiming, resetConfig, updateTiming 
   } = useMatchStore();
   
-  const { generatePairs, replaceMatched } = useMatchLogic(4);
+  const { generatePairs, replaceMatched } = useMatchLogic(5);
   const [timeRemaining, setTimeRemaining] = useState(105); // 1m45s
+
+  const [recentSlots, setRecentSlots] = useState<number[]>([]);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     if (itemsA.length === 0 && score === 0) {
@@ -37,20 +40,84 @@ export function MatchMadness({ trailMode, onTrailFinish }: any) {
     return () => clearInterval(interval);
   }, [timeRemaining, updateTiming, pause]);
 
+  const matchedIndicesStr = itemsA
+    .map((item, index) => (item.matched ? index : -1))
+    .filter((i) => i !== -1)
+    .join(",");
+
   useEffect(() => {
-    const hasMatches = itemsA.some(i => i.matched);
-    if (hasMatches) {
-      const timeout = setTimeout(() => {
-        replaceMatched();
-      }, 300);
-      return () => clearTimeout(timeout);
+    if (!matchedIndicesStr) return;
+
+    const matchedIndices = matchedIndicesStr.split(",").map(Number);
+    const hasNewSlot = matchedIndices.some((idx) => !recentSlots.includes(idx));
+
+    let timeoutDuration = 0;
+
+    if (hasNewSlot) {
+      // If we are clearing multiple items at once (variety reward)
+      if (matchedIndices.length > 1) {
+        timeoutDuration = 100;
+      } else {
+        timeoutDuration = 200;
+      }
+    } else {
+      // User is ping-ponging or repeating the same slots
+      timeoutDuration = 800 + (streak + 1) * 1500;
     }
-  }, [itemsA, replaceMatched]);
+
+    const timeout = setTimeout(() => {
+      const matchedIndices = matchedIndicesStr.split(",").map(Number);
+      
+      // 1. Identify which PAIR IDs are being replaced
+      const pairIdsToReplace = matchedIndices.map(idx => itemsA[idx].pairId);
+
+      if (!hasNewSlot) {
+        setStreak((s) => s + 1);
+      } else {
+        setStreak(0);
+        const newSlot = matchedIndices.find((idx) => !recentSlots.includes(idx)) ?? matchedIndices[0];
+        setRecentSlots((prev) => {
+          const updated = [newSlot, ...prev.filter(idx => idx !== newSlot)];
+          return updated.slice(0, 2);
+        });
+      }
+      
+      // 2. Perform replacement
+      replaceMatched();
+
+      // 3. Find the NEW item IDs that replaced the old ones
+      // We need to wait a tick or use the state after replaceMatched
+      setTimeout(() => {
+        const state = useMatchStore.getState();
+        const newIdsToUnlock: string[] = [];
+        
+        state.itemsA.forEach(item => {
+          if (pairIdsToReplace.includes(item.pairId) || item.loading) {
+            newIdsToUnlock.push(item.id);
+          }
+        });
+        state.itemsB.forEach(item => {
+          if (pairIdsToReplace.includes(item.pairId) || item.loading) {
+            newIdsToUnlock.push(item.id);
+          }
+        });
+
+        if (newIdsToUnlock.length > 0) {
+          state.setItemsLoading(newIdsToUnlock, false);
+        }
+      }, 1000);
+
+    }, timeoutDuration);
+
+    return () => clearTimeout(timeout);
+  }, [matchedIndicesStr, recentSlots, streak, replaceMatched, itemsA, itemsB]);
 
   const handleReset = () => {
     pause();
     reset();
     setTimeRemaining(105);
+    setRecentSlots([]);
+    setStreak(0);
     // Let the useEffect handle the generation when itemsA turns 0!
     start();
   };

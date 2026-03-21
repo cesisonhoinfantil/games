@@ -54,7 +54,7 @@ export function useMatchLogic(pairsCount: number = 4) {
          return keyConflicts.includes(selectedKey) || selectedKeyConflicts.includes(key);
       });
       
-      if (!hasConflict) {
+      if (!hasConflict && !selectedKeys.includes(key)) {
         selectedKeys.push(key);
       }
     }
@@ -128,14 +128,14 @@ export function useMatchLogic(pairsCount: number = 4) {
         for (const key of prioritizedKeys) {
           const hasConflict = existingKeys.some(existingKey => {
              const keyConflicts = conflicts[key] || [];
-             const existingKeyConflicts = conflicts[existingKey as keyof typeof conflicts] || [];
-             return keyConflicts.includes(existingKey) || existingKeyConflicts.includes(key);
+             const selectedKeyConflicts = conflicts[existingKey as keyof typeof conflicts] || [];
+             return keyConflicts.includes(existingKey) || selectedKeyConflicts.includes(key);
           });
-          if (!hasConflict) {
+          if (!hasConflict && !existingKeys.includes(key as string)) {
             selectedLetter = key;
             break;
           }
-        }
+          }
         
         existingKeys.push(selectedLetter as string);
         addedKeys.push(selectedLetter as string);
@@ -173,8 +173,8 @@ export function useMatchLogic(pairsCount: number = 4) {
           itemB = { id: nanoid(), value: selectedLetter, type: "letter", pairId, matched: false, extraInfo, letterKey: selectedLetter };
         }
 
-        newItemsA[idxA] = itemA;
-        newItemsB[idxB] = itemB;
+        newItemsA[idxA] = { ...itemA, loading: true };
+        newItemsB[idxB] = { ...itemB, loading: true };
       }
     });
     
@@ -198,7 +198,7 @@ export function useMatchLogic(pairsCount: number = 4) {
           
           setTimeout(() => {
             markMatch(matchedA, matchedB);
-          }, 800);
+          }, 200);
         } else {
           markError(selectedA, selectedB);
           if (mode === "pairs") {

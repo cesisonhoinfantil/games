@@ -46,7 +46,7 @@ export function MatchTile({
   };
 
   const handleClick = () => {
-    if (!disabled && !item.matched && !item.error && !item.success) {
+    if (!disabled && !item.matched && !item.error && !item.success && !item.loading) {
       playSound();
       onClick();
     }
@@ -55,7 +55,7 @@ export function MatchTile({
   return (
     <button
       onClick={handleClick}
-      disabled={disabled || item.matched || item.error || item.success}
+      disabled={disabled || item.matched || item.error || item.success || item.loading}
       className={cn(
         "w-full h-24 mb-4 rounded-xl flex items-center justify-center transition-all duration-200",
         "border-b-4 bg-white active:border-b-0 active:translate-y-1",
@@ -63,11 +63,13 @@ export function MatchTile({
           !item.error &&
           !item.success &&
           !item.matched &&
+          !item.loading &&
           "border-gray-200 hover:bg-gray-50",
         isSelected &&
           !item.error &&
           !item.success &&
           !item.matched &&
+          !item.loading &&
           "border-sky-500 bg-sky-100 ring-2 ring-sky-300",
         item.error &&
           "border-red-500 bg-red-100 motion-preset-shake pointer-events-none",
@@ -75,10 +77,15 @@ export function MatchTile({
           "border-green-500 bg-green-100 ring-2 ring-green-300 motion-preset-confetti duration-1000 motion-duration-1000 pointer-events-none",
         item.matched &&
           "border-gray-300 bg-gray-200 opacity-60 pointer-events-none active:translate-y-0 active:border-b-4",
+        item.loading &&
+          "border-gray-300 bg-white opacity-100 pointer-events-none",
       )}
     >
-      {item.type === "letter" && (
-        <div className="flex flex-col items-center">
+      {item.type === "letter" && !item.matched && (
+        <div className={cn(
+          "flex flex-col items-center motion-preset-fade motion-duration-1000 transition-opacity duration-1000",
+          item.loading ? "opacity-40" : "opacity-100"
+        )}>
           <span
             className={cn(
               "text-4xl font-bold uppercase pointer-events-none",
@@ -94,18 +101,23 @@ export function MatchTile({
           )}
         </div>
       )}
-      {item.type === "image" && (
+      {item.type === "image" && !item.matched && (
         <img
           src={`/onomatopeias/png/${item.value}.png`}
           alt="Onomatopeia"
           className={cn(
-            "h-16 w-16 object-contain pointer-events-none",
+            "h-16 w-16 object-contain pointer-events-none motion-preset-fade motion-duration-1000 transition-opacity duration-1000",
+            item.loading ? "opacity-40" : "opacity-100",
             item.matched && "grayscale opacity-50",
           )}
         />
       )}
-      {item.type === "sound" && (
-        <div className={cn("w-full px-4", item.matched && "opacity-50 pointer-events-none grayscale")}>
+      {item.type === "sound" && !item.matched && (
+        <div className={cn(
+          "w-full px-4 motion-preset-fade motion-duration-1000 transition-opacity duration-1000",
+          item.loading ? "opacity-40" : "opacity-100",
+          item.matched && "opacity-50 pointer-events-none grayscale"
+        )}>
           <WavesurferPlayer
             height={40}
             barWidth={3}
