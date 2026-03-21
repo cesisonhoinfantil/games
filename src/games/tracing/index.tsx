@@ -22,7 +22,7 @@ export function TracingGame() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [loading, setLoading] = useState(false);
 
-  const [letter, setLetter] = useState("B");
+  const [letter, setLetter] = useState("A");
   const [gabarito, setGabarito] = useState<Gabarito | null>(null);
 
   const [isDrawing, setIsDrawing] = useState(false);
