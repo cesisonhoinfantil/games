@@ -4,6 +4,19 @@
 @plugin "tailwindcss-animate";
 @plugin "tailwindcss-motion";
 
+@font-face {
+  font-family: "Irineu Brasil";
+  src: url("/assets/fonts/Regular - T2/Regular - T2 SR/Irineu Brasil Regular T2 SR.otf")
+    format("opentype");
+  font-variant-ligatures: no-common-ligatures;
+}
+
+.font-cursive {
+  font-family: "Irineu Brasil", cursive;
+  font-variant-ligatures: none;
+  font-feature-settings: "calt" 0, "liga" 0, "clig" 0, "swsh" 0;
+}
+
 @theme {
   --font-inter: "Inter", serif;
 
