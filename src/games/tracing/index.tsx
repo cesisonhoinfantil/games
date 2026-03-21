@@ -295,26 +295,26 @@ export function TracingGame() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 p-4 font-sans">
-      <div className="w-full max-w-2xl flex items-center justify-between mb-6">
+    <div className="flex flex-col items-center justify-start min-h-screen bg-slate-50 p-4 font-sans sm:justify-center">
+      <div className="w-full max-w-2xl flex items-center justify-between mb-6 px-1">
         <Button
           variant="ghost"
-          size="lg"
+          size="icon"
           onClick={() => navigate(-1)}
-          className="rounded-2xl"
+          className="rounded-2xl shrink-0 bg-white shadow-sm border border-slate-100"
         >
-          <ChevronLeft className="mr-2 h-6 w-6" /> Voltar
+          <ChevronLeft className="h-6 w-6 text-slate-500" />
         </Button>
-        <h1 className="text-3xl font-black text-slate-800 tracking-tight">
-          Trato de Letra
+        <h1 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight shrink min-w-0 text-center mx-2 truncate">
+          Tracejados
         </h1>
         <Button
           variant="outline"
-          size="lg"
+          size="icon"
           onClick={handleResetClick}
-          className="rounded-2xl border-2"
+          className="rounded-2xl border-2 shrink-0 bg-white"
         >
-          <RotateCcw className="mr-2 h-5 w-5" /> Limpar
+          <RotateCcw className="h-5 w-5 text-slate-500" />
         </Button>
       </div>
 
@@ -354,7 +354,7 @@ export function TracingGame() {
           }}
           onTouchMove={draw}
           onTouchEnd={endDrawing}
-          className="relative z-10 cursor-crosshair touch-none bg-transparent"
+          className="relative z-10 cursor-crosshair touch-none bg-transparent w-full h-full"
         />
       </div>
 
