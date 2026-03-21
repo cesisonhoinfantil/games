@@ -24,6 +24,7 @@ export function TracingGame() {
 
   const [letter, setLetter] = useState("A");
   const [gabarito, setGabarito] = useState<Gabarito | null>(null);
+  const [activeTab, setActiveTab] = useState<"letras" | "numeros">("letras");
 
   const [isDrawing, setIsDrawing] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -366,68 +367,104 @@ export function TracingGame() {
           </div>
         )}
 
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">MAIÚSCULAS</h3>
-            <div className="grid grid-cols-7 gap-2">
-              {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((l) => (
-                <button
-                  key={`mai-${l}`}
-                  onClick={() => setLetter(l)}
-                  className={`h-12 text-xl font-black rounded-2xl transition-all ${
-                    letter === l
-                      ? "bg-sky-500 text-white shadow-lg scale-110"
-                      : "bg-white text-slate-400 border-2 border-slate-50 hover:border-sky-100 hover:text-sky-500"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="w-full h-px bg-slate-200"></div>
-
-          <div>
-            <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">MINÚSCULAS</h3>
-            <div className="grid grid-cols-7 gap-2">
-              {"abcdefghijklmnopqrstuvwxyz".split("").map((l) => (
-                <button
-                  key={`min-${l}`}
-                  onClick={() => setLetter(l)}
-                  className={`h-12 text-xl font-black rounded-2xl transition-all ${
-                    letter === l
-                      ? "bg-sky-500 text-white shadow-lg scale-110"
-                      : "bg-white text-slate-400 border-2 border-slate-50 hover:border-sky-100 hover:text-sky-500"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="w-full h-px bg-slate-200"></div>
-
-          <div>
-            <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">NÚMEROS</h3>
-            <div className="grid grid-cols-5 gap-3 max-w-sm mx-auto">
-              {"1234567890".split("").map((l) => (
-                <button
-                  key={`num-${l}`}
-                  onClick={() => setLetter(l)}
-                  className={`h-12 text-xl font-black rounded-2xl transition-all ${
-                    letter === l
-                      ? "bg-amber-500 text-white shadow-lg scale-110"
-                      : "bg-white text-slate-400 border-2 border-slate-50 hover:border-amber-100 hover:text-amber-500"
-                  }`}
-                >
-                  {l}
-                </button>
-              ))}
-            </div>
-          </div>
+        <div className="flex gap-4 mb-6 justify-center">
+          <Button
+            variant={activeTab === "letras" ? "default" : "outline"}
+            onClick={() => setActiveTab("letras")}
+            className={`rounded-2xl text-lg h-12 px-8 ${activeTab === "letras" ? "bg-sky-500 hover:bg-sky-600 text-white shadow-md" : "text-slate-400 border-2 bg-white"}`}
+          >
+            Letras
+          </Button>
+          <Button
+            variant={activeTab === "numeros" ? "default" : "outline"}
+            onClick={() => setActiveTab("numeros")}
+            className={`rounded-2xl text-lg h-12 px-8 ${activeTab === "numeros" ? "bg-amber-500 hover:bg-amber-600 text-white shadow-md" : "text-slate-400 border-2 hover:text-amber-500 hover:border-amber-200 bg-white"}`}
+          >
+            Números
+          </Button>
         </div>
+
+        {activeTab === "letras" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div>
+              <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">
+                MAIÚSCULAS
+              </h3>
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(2.5rem,1fr))] sm:grid-cols-7 gap-2">
+                {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((l) => (
+                  <button
+                    key={`mai-${l}`}
+                    onClick={() => {
+                      setLetter(l);
+                      setFails(0);
+                    }}
+                    className={`h-12 text-xl font-black rounded-2xl transition-all ${
+                      letter === l
+                        ? "bg-sky-500 text-white shadow-lg scale-110"
+                        : "bg-white text-slate-400 border-2 border-slate-50 hover:border-sky-100 hover:text-sky-500 shadow-sm"
+                    }`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="w-full h-px bg-slate-200"></div>
+
+            <div>
+              <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3">
+                MINÚSCULAS
+              </h3>
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(2.5rem,1fr))] sm:grid-cols-7 gap-2">
+                {"abcdefghijklmnopqrstuvwxyz".split("").map((l) => (
+                  <button
+                    key={`min-${l}`}
+                    onClick={() => {
+                      setLetter(l);
+                      setFails(0);
+                    }}
+                    className={`h-12 text-xl font-black rounded-2xl transition-all ${
+                      letter === l
+                        ? "bg-sky-500 text-white shadow-lg scale-110"
+                        : "bg-white text-slate-400 border-2 border-slate-50 hover:border-sky-100 hover:text-sky-500 shadow-sm"
+                    }`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "numeros" && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div>
+              <h3 className="text-slate-400 font-bold text-sm tracking-widest pl-2 mb-3 text-center">
+                NÚMEROS
+              </h3>
+              <div className="grid grid-cols-[repeat(auto-fit,minmax(3rem,1fr))] sm:grid-cols-5 gap-3 max-w-sm mx-auto">
+                {"1234567890".split("").map((l) => (
+                  <button
+                    key={`num-${l}`}
+                    onClick={() => {
+                      setLetter(l);
+                      setFails(0);
+                    }}
+                    className={`h-14 sm:h-12 text-2xl sm:text-xl font-black rounded-2xl transition-all ${
+                      letter === l
+                        ? "bg-amber-500 text-white shadow-lg scale-110"
+                        : "bg-white text-slate-400 border-2 border-slate-50 hover:border-amber-100 hover:text-amber-500 shadow-sm"
+                    }`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
