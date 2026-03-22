@@ -1,10 +1,10 @@
 import { GameEndModal } from "@/games/base/components/GameEndModal";
 import { GameHeader } from "@/games/base/components/GameHeader";
-import { useEffect, useMemo } from "react";
-import { useMemoryStore } from "./stores/useMemoryStore";
-import { useMemoryLogic } from "./hooks/useMemoryLogic";
-import { MemoryCard } from "./components/MemoryCard";
 import { cn } from "@/lib/utils";
+import { useEffect, useMemo, useState } from "react";
+import { MemoryCard } from "./components/MemoryCard";
+import { useMemoryLogic } from "./hooks/useMemoryLogic";
+import { useMemoryStore } from "./stores/useMemoryStore";
 
 export function MemoryGameView({ trailMode, onTrailFinish }: any) {
   const {
@@ -29,11 +29,11 @@ export function MemoryGameView({ trailMode, onTrailFinish }: any) {
     getBestTiming,
     flipCard,
   } = useMemoryStore();
-  
+
   const { generateCards } = useMemoryLogic();
 
   useEffect(() => {
-    if (started && cards.length === 0 && life > 0 && status !== 'lose') {
+    if (started && cards.length === 0 && life > 0 && status !== "lose") {
       generateCards();
     }
   }, [started, cards.length, life, status, generateCards]);
@@ -69,13 +69,34 @@ export function MemoryGameView({ trailMode, onTrailFinish }: any) {
     resetConfig();
   };
 
-  // Determine grid columns based on card count
+  const [isLandscape, setIsLandscape] = useState(
+    typeof window !== "undefined"
+      ? window.innerWidth > window.innerHeight
+      : false,
+  );
+
+  useEffect(() => {
+    const handleResize = () =>
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const gridClass = useMemo(() => {
-    if (cards.length <= 6) return "grid-cols-2 md:grid-cols-3";
-    if (cards.length <= 8) return "grid-cols-2 md:grid-cols-4";
-    if (cards.length <= 12) return "grid-cols-3 md:grid-cols-4";
-    return "grid-cols-4";
-  }, [cards.length]);
+    if (isLandscape) {
+      if (cards.length <= 6) return "grid-cols-3"; // 2 rows
+      if (cards.length === 8) return "grid-cols-4"; // 2 rows
+      if (cards.length === 12) return "grid-cols-6"; // 2 rows
+      if (cards.length === 16) return "grid-cols-8"; // 2 rows
+      return "grid-cols-8";
+    } else {
+      if (cards.length <= 6) return "grid-cols-2"; // 3 rows
+      if (cards.length === 8) return "grid-cols-2"; // 4 rows
+      if (cards.length === 12) return "grid-cols-3"; // 4 rows
+      if (cards.length === 16) return "grid-cols-4"; // 4 rows
+      return "grid-cols-4";
+    }
+  }, [cards.length, isLandscape]);
 
   return (
     <div className="h-full w-full bg-[#74E1FF] grid grid-rows-[min-content_1fr_min-content] overflow-hidden">
@@ -86,14 +107,21 @@ export function MemoryGameView({ trailMode, onTrailFinish }: any) {
         onUpdateTiming={updateTiming}
       />
 
-      <div className="flex flex-col flex-1 pt-4 pb-4 overflow-hidden items-center justify-center pointer-events-none">
-        <div className={cn("grid gap-4 w-full max-w-2xl px-4 pointer-events-auto", gridClass)}>
+      <div className="flex flex-col flex-1 py-4 overflow-hidden items-center justify-center pointer-events-none">
+        <div
+          className={cn(
+            "grid gap-2 sm:gap-4 w-full max-w-5xl px-2 sm:px-4 pointer-events-auto",
+            gridClass,
+          )}
+        >
           {cards.map((card) => (
             <MemoryCard
               key={card.id}
               card={card}
               onClick={() => flipCard(card.id)}
-              disabled={selectedCards.length >= 2 || paused || status !== undefined}
+              disabled={
+                selectedCards.length >= 2 || paused || status !== undefined || useMemoryStore.getState().isRevealing
+              }
             />
           ))}
         </div>

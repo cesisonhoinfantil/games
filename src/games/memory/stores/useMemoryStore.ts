@@ -4,24 +4,23 @@ import { createBaseMethods } from "@/games/base/store/methods";
 import { InitialBaseData } from "@/games/base/store/static";
 import { MemoryCard } from "../types";
 
-export interface MemoryGameState {
+export interface MemoryState extends BaseGameState {
   cards: MemoryCard[];
   selectedCards: string[];
-  history: string[];
-
+  history: string[]; // Keep track of recently used pairs
+  score: number;
+  errors: number;
+  isRevealing: boolean;
   setCards: (cards: MemoryCard[]) => void;
   addToHistory: (keys: string[]) => void;
-
   flipCard: (id: string) => void;
-
-  markSuccess: (idA: string, idB: string) => void;
   markMatch: (idA: string, idB: string) => void;
+  markSuccess: (idA: string, idB: string) => void;
   markError: (idA: string, idB: string) => void;
   clearError: (idA: string, idB: string) => void;
+  setIsRevealing: (revealing: boolean) => void;
   decreaseLife: () => void;
 }
-
-export type MemoryState = MemoryGameState & BaseGameState;
 
 export const useMemoryStore = create<MemoryState>()((set, get, api) => {
   const baseMethods = createBaseMethods<MemoryState>()(set, get, api);
@@ -29,10 +28,12 @@ export const useMemoryStore = create<MemoryState>()((set, get, api) => {
   return {
     ...InitialBaseData,
     ...baseMethods,
-
     cards: [],
     selectedCards: [],
     history: [],
+    score: 0,
+    errors: 0,
+    isRevealing: false,
 
     verify: () => {
       set({ status: "win" });
@@ -49,6 +50,7 @@ export const useMemoryStore = create<MemoryState>()((set, get, api) => {
     },
 
     setCards: (cards) => set({ cards }),
+    setIsRevealing: (isRevealing) => set({ isRevealing }),
     addToHistory: (keys) =>
       set((state) => {
         const newHistory = [...state.history, ...keys];

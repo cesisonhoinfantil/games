@@ -1,7 +1,12 @@
-import { useCallback, useEffect } from "react";
-import { useMemoryStore } from "../stores/useMemoryStore";
-import { AllOptions, optionsKeys, conflicts, AltsExtraInfos } from "../../sound-quiz/states/static";
 import { nanoid } from "nanoid";
+import { useCallback, useEffect } from "react";
+import {
+  AllOptions,
+  AltsExtraInfos,
+  conflicts,
+  optionsKeys,
+} from "../../sound-quiz/states/static";
+import { useMemoryStore } from "../stores/useMemoryStore";
 import { MemoryCard } from "../types";
 
 function shuffleArray<T>(array: T[]): T[] {
@@ -26,6 +31,8 @@ export function useMemoryLogic() {
     decreaseLife,
     history,
     addToHistory,
+    isRevealing,
+    setIsRevealing,
   } = useMemoryStore();
 
   const getPairsCount = useCallback(() => {
@@ -45,13 +52,15 @@ export function useMemoryLogic() {
   }, [difficulty]);
 
   const getPrioritizedKeys = useCallback(() => {
-    return [...optionsKeys].sort(() => Math.random() - 0.5).sort((a, b) => {
-      const aInHistory = history.includes(a);
-      const bInHistory = history.includes(b);
-      if (aInHistory && !bInHistory) return 1;
-      if (!aInHistory && bInHistory) return -1;
-      return 0;
-    });
+    return [...optionsKeys]
+      .sort(() => Math.random() - 0.5)
+      .sort((a, b) => {
+        const aInHistory = history.includes(a);
+        const bInHistory = history.includes(b);
+        if (aInHistory && !bInHistory) return 1;
+        if (!aInHistory && bInHistory) return -1;
+        return 0;
+      });
   }, [history]);
 
   const generateCards = useCallback(() => {
@@ -64,8 +73,12 @@ export function useMemoryLogic() {
 
       const hasConflict = selectedKeys.some((selectedKey) => {
         const keyConflicts = conflicts[key] || [];
-        const selectedKeyConflicts = conflicts[selectedKey as keyof typeof conflicts] || [];
-        return keyConflicts.includes(selectedKey) || selectedKeyConflicts.includes(key);
+        const selectedKeyConflicts =
+          conflicts[selectedKey as keyof typeof conflicts] || [];
+        return (
+          keyConflicts.includes(selectedKey) ||
+          selectedKeyConflicts.includes(key)
+        );
       });
 
       if (!hasConflict && !selectedKeys.includes(key)) {
@@ -92,32 +105,107 @@ export function useMemoryLogic() {
       let itemB: MemoryCard;
 
       let currentDiff = difficulty;
-      if (currentDiff === "very hard" as any || currentDiff === "challenge" as any) {
+      if (
+        currentDiff === ("very hard" as any) ||
+        currentDiff === ("challenge" as any)
+      ) {
         const diffs = ["very easy", "easy", "medium", "hard"];
         currentDiff = diffs[Math.floor(Math.random() * diffs.length)] as any;
       }
 
-      const defaultProps = { pairId, flipped: false, matched: false, letterKey: letter, extraInfo };
+      const defaultProps = {
+        pairId,
+        flipped: false,
+        matched: false,
+        letterKey: letter,
+        extraInfo,
+      };
 
       if (currentDiff === "very easy") {
-        itemA = { id: nanoid(), value: randomImageId, type: "image", playSoundOnClick: true, ...defaultProps };
-        itemB = { id: nanoid(), value: letter, type: "letter", ...defaultProps };
+        itemA = {
+          id: nanoid(),
+          value: randomImageId,
+          type: "image",
+          playSoundOnClick: true,
+          ...defaultProps,
+        };
+        itemB = {
+          id: nanoid(),
+          value: letter,
+          type: "letter",
+          ...defaultProps,
+        };
       } else if (currentDiff === "easy") {
-        itemA = { id: nanoid(), value: randomImageId, type: "image", ...defaultProps };
-        itemB = { id: nanoid(), value: letter, type: "letter", ...defaultProps };
+        itemA = {
+          id: nanoid(),
+          value: randomImageId,
+          type: "image",
+          ...defaultProps,
+        };
+        itemB = {
+          id: nanoid(),
+          value: letter,
+          type: "letter",
+          ...defaultProps,
+        };
       } else if (currentDiff === "medium") {
-        itemA = { id: nanoid(), value: randomImageId, type: "sound", ...defaultProps };
-        itemB = { id: nanoid(), value: randomImageId, type: "image", ...defaultProps };
+        itemA = {
+          id: nanoid(),
+          value: randomImageId,
+          type: "sound",
+          ...defaultProps,
+        };
+        itemB = {
+          id: nanoid(),
+          value: randomImageId,
+          type: "image",
+          ...defaultProps,
+        };
       } else {
-        itemA = { id: nanoid(), value: randomImageId, type: "sound", ...defaultProps };
-        itemB = { id: nanoid(), value: letter, type: "letter", ...defaultProps };
+        itemA = {
+          id: nanoid(),
+          value: randomImageId,
+          type: "sound",
+          ...defaultProps,
+        };
+        itemB = {
+          id: nanoid(),
+          value: letter,
+          type: "letter",
+          ...defaultProps,
+        };
       }
 
       newCards.push(itemA, itemB);
     });
 
-    setCards(shuffleArray(newCards));
-  }, [difficulty, getPairsCount, getPrioritizedKeys, addToHistory, setCards]);
+    const allCards: MemoryCard[] = shuffleArray(newCards);
+
+    // Set all cards to face up initially for the reveal phase
+    const revealedCards = allCards.map((c) => ({ ...c, flipped: true }));
+    setCards(revealedCards);
+    setIsRevealing(true);
+  }, [
+    difficulty,
+    getPairsCount,
+    getPrioritizedKeys,
+    addToHistory,
+    setCards,
+    setIsRevealing,
+  ]);
+
+  // Logic to handle reveal phase
+  useEffect(() => {
+    if (isRevealing) {
+      const timer = setTimeout(() => {
+        useMemoryStore.setState((state) => ({
+          cards: state.cards.map((c) => ({ ...c, flipped: false })),
+          isRevealing: false,
+        }));
+      }, 2000); // Cards stay face up for 2 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [isRevealing]);
 
   // Logic to handle selection changes
   useEffect(() => {
@@ -126,10 +214,17 @@ export function useMemoryLogic() {
       const cardA = cards.find((c) => c.id === idA);
       const cardB = cards.find((c) => c.id === idB);
 
-      if (cardA && cardB && !cardA.error && !cardA.success && !cardB.error && !cardB.success) {
+      if (
+        cardA &&
+        cardB &&
+        !cardA.error &&
+        !cardA.success &&
+        !cardB.error &&
+        !cardB.success
+      ) {
         if (cardA.pairId === cardB.pairId) {
           markSuccess(idA, idB);
-          
+
           setTimeout(() => {
             markMatch(idA, idB);
           }, 600);
@@ -142,7 +237,15 @@ export function useMemoryLogic() {
         }
       }
     }
-  }, [selectedCards, cards, markSuccess, markMatch, markError, clearError, decreaseLife]);
+  }, [
+    selectedCards,
+    cards,
+    markSuccess,
+    markMatch,
+    markError,
+    clearError,
+    decreaseLife,
+  ]);
 
   return { generateCards };
 }
