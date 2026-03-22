@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import WavesurferPlayer from "@wavesurfer/react";
 import { MemoryCard as MemoryCardType } from "../types";
 
 interface MemoryCardProps {
@@ -19,11 +20,11 @@ export function MemoryCard({ card, onClick, disabled }: MemoryCardProps) {
 
     if (card.playSoundOnClick || card.type === "sound") {
       const vol = card.type === "sound" ? 1 : 0.6;
-      const soundUrl =
+      const audioUrl =
         card.type === "sound"
-          ? `/onomatopeias/audios/${card.value}.mp3`
-          : `/onomatopeias/audios/${card.letterKey}.mp3`;
-      const itemSound = new Audio(soundUrl);
+          ? `/sounds/onomatopeias/${card.value}.mp3`
+          : `/sounds/onomatopeias/${card.letterKey}.mp3`;
+      const itemSound = new Audio(audioUrl);
       itemSound.volume = vol;
       itemSound.play().catch(() => {});
     }
@@ -55,13 +56,22 @@ export function MemoryCard({ card, onClick, disabled }: MemoryCardProps) {
       );
     }
     if (card.type === "sound") {
+      const fetchUrl = `/sounds/onomatopeias/${card.value}.mp3`;
       return (
-        <div className="flex items-center justify-center w-full h-full">
-          <img
-            src="/icons/sound-icon.png"
-            alt="Sound"
-            className="w-1/2 h-1/2 object-contain opacity-50"
-          />
+        <div className="flex items-center justify-center w-full h-full p-2 sm:p-4 opacity-80 pointer-events-none">
+          <div className="w-full">
+            <WavesurferPlayer
+              height={40}
+              barWidth={3}
+              barGap={2}
+              barRadius={3}
+              waveColor="#0ea5e9"
+              interact={false}
+              cursorWidth={0}
+              url={fetchUrl}
+              normalize
+            />
+          </div>
         </div>
       );
     }
